@@ -14,7 +14,7 @@ function CannedVas (ctx) {
     // object is stateless.  Methods should all return `this` if applicable
 
     this.ctx = (ctx instanceof HTMLCanvasElement) ? ctx.getContext('2d') : ctx
-    this.vas = ctx.canvas
+    this.vas = this.ctx.canvas
 }
 
 // Get / Set methods
