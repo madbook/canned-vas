@@ -64,6 +64,16 @@ CannedVas.prototype.strokeStyle = function (style, width) {
     return this
 }
 
+CannedVas.prototype.paintStyle = function (style) {
+    // Set the fill and stroke style, or get the fill style
+
+    if (style === undefined)
+        return this.ctx.fillStyle
+    this.ctx.fillStyle = style
+    this.ctx.strokeStyle = style
+    return this
+}
+
 CannedVas.prototype.font = function (fontType) {
     // Get or set the `font` attribute
 
@@ -315,7 +325,7 @@ CannedVas.prototype.paintCircle = function (x, y, radius) {
     return this.beginPath().circle(x, y, radius).fill().stroke()
 }
 
-Canned.prototype.text = function (text, x, y, maxWidth) {
+CannedVas.prototype.text = function (text, x, y, maxWidth) {
     // Add text to the subpath
     // stub
     // not sure if this one is possible...
@@ -439,7 +449,7 @@ CannedVas.prototype.drawImageCentered = function (src) {
     return this
 }
 
-CannedVas.prototype.drawImageFull = function (src) {
+CannedVas.prototype.drawImageCanvas = function (src) {
     // Draw an image (or canvas) to cover the entire canvas
 
     var ctx = this.ctx
@@ -731,7 +741,20 @@ CannedVas.prototype.createCanvas = function () {
 CannedVas.prototype.clone = function () {
     // Clone the given canvas, returning it (wrapped in a CannedVas object)
 
-    return this.clone().drawImage(this.vas, 0, 0)
+    return this.createCanvas().drawImage(this.vas, 0, 0)
+}
+
+CannedVas.prototype.copyStyle = function (can) {
+    // Copy some context properties from another CannedVas instance
+
+    var copyProps = ['fillStyle', 'strokeStyle', 'lineWidth', 'font',
+        'textAlign', 'textBaseLine', 'globalAlpha', 'globalCompositeOperation']
+
+    copyProps.forEach(function (prop) {
+        this[prop](can[prop]())
+    }, this)
+
+    return this
 }
 
 CannedVas.prototype.open = function (fnc) {
