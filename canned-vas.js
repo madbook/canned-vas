@@ -9,6 +9,9 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     }
 }
 
+var PI = Math.PI
+var TAU = PI * 2
+
 function CannedVas (ctx) {
     // Other than storing a reference to the rendering context, the CannedVas
     // object is stateless.  Methods should all return `this` if applicable
@@ -208,6 +211,16 @@ CannedVas.prototype.lineDash = function (sequence) {
     return this.ctx.setLineDash(sequence)
 }
 
+CannedVas.prototype.imageSmoothing =
+CannedVas.prototype.imageSmoothingEnabled = function (bool) {
+    // Sets the `imageSmoothingEnabled` attribute
+
+    if (bool === undefined)
+        return this.ctx.imageSmoothingEnabled
+    this.ctx.imageSmoothingEnabled = bool
+    return this
+}
+
 // Methods
 
 CannedVas.prototype.save = function () {
@@ -224,13 +237,12 @@ CannedVas.prototype.restore = function () {
     return this
 }
 
-// Non-path drawing methods
+// Drawing methods
 
-CannedVas.prototype.clearAll = function () {
-    // Erase the entire canvas
+CannedVas.prototype.rect = function (x, y, w, h) {
+    // Adds a rectangle to the path?
 
-    var ctx = this.ctx
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+    this.ctx.rect(x, y, w, h)
     return this
 }
 
@@ -241,15 +253,8 @@ CannedVas.prototype.clearRect = function (x, y, w, h) {
     return this
 }
 
-CannedVas.prototype.fillAll = function () {
-    // Fill the entire canvas
-
-    var ctx = this.ctx
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-    return this
-}
-
 CannedVas.prototype.fillRect = function (x, y, w, h) {
+
     // Fill a portion of the canvas
 
     this.ctx.fillRect(x, y, w, h)
@@ -260,6 +265,35 @@ CannedVas.prototype.strokeRect = function (x, y, w, h) {
     // Stroke a rectangle
 
     this.ctx.strokeRect(x, y, w, h)
+    return this
+}
+
+CannedVas.prototype.paintRect = function (x, y, w, h) {
+    // Fill and stroke a rectangle
+
+    this.ctx.fillRect(x, y, w, h)
+    this.ctx.strokeRect(x, y, w, h)
+    return this
+}
+
+CannedVas.prototype.circle = function (x, y, radius) {
+    // Add a circular path at x, y
+
+    this.ctx.arc(x, y, radius, 0, TAU)
+    return this
+}
+
+CannedVas.prototype.clearCircle = function (x, y, radius) {
+    // Clear a circular area
+
+    var alpha = this.ctx.globalAlpha
+    var composite = this.ctx.globalCompositeOperation
+
+    this.ctx.globalAlpha = 1
+    this.ctx.globalCompositeOperation = 'destination-out'
+    this.beginPath().circle(x, y, radius).fill()
+    this.ctx.globalCompositeOperation = composite
+    this.ctx.globalAlpha = alpha
     return this
 }
 
@@ -275,6 +309,32 @@ CannedVas.prototype.strokeCircle = function (x, y, radius) {
     return this.beginPath().circle(x, y, radius).stroke()
 }
 
+CannedVas.prototype.paintCircle = function (x, y, radius) {
+    // Fill and stroke a circle
+
+    return this.beginPath().circle(x, y, radius).fill().stroke()
+}
+
+Canned.prototype.text = function (text, x, y, maxWidth) {
+    // Add text to the subpath
+    // stub
+    // not sure if this one is possible...
+}
+
+CannedVas.prototype.clearText = function (text, x, y, maxWidth) {
+    // Clear area using text
+
+    var alpha = this.ctx.globalAlpha
+    var composite = this.ctx.globalCompositeOperation
+
+    this.ctx.globalAlpha = 1
+    this.ctx.globalCompositeOperation = 'destination-out'
+    this.ctx.fillText(text, x, y, maxWidth)
+    this.ctx.globalCompositeOperation = composite
+    this.ctx.globalAlpha = alpha
+    return this
+}
+
 CannedVas.prototype.fillText = function (text, x, y, maxWidth) {
     // Draws text
 
@@ -288,6 +348,53 @@ CannedVas.prototype.strokeText = function (text, x, y, maxWidth) {
     this.ctx.strokeText(text, x, y, maxWidth)
     return this
 }
+
+CannedVas.prototype.paintText = function (text, x, y, maxWidth) {
+    // Fill and stroke some text
+
+    this.ctx.fillText(text, x, y, maxWidth)
+    this.ctx.strokeText(text, x, y, maxWidth)
+    return this
+}
+
+CannedVas.prototype.canvas = function () {
+    // Add a rect the size of the canvas to the subpath
+
+    this.rect(0, 0, this.vas.width, this.vas.height)
+    return this
+}
+
+CannedVas.prototype.clearCanvas = function () {
+    // Erase the entire canvas
+
+    var ctx = this.ctx
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+    return this
+}
+
+CannedVas.prototype.fillCanvas = function () {
+    // Fill the entire canvas
+
+    this.ctx.fillRect(0, 0, this.vas.width, this.vas.height)
+    return this
+}
+
+CannedVas.prototype.strokeCanvas = function () {
+    // Stroke the entire canvas
+
+    this.ctx.strokeRect(0, 0, this.vas.width, this.vas.height)
+    return this
+}
+
+CannedVas.prototype.paintCanvas = function () {
+    // Fill and stroke the entire canvas
+
+    this.ctx.fillRect(0, 0, this.vas.width, this.vas.height)
+    this.ctx.strokeRect(0, 0, this.vas.width, this.vas.height)
+    return this
+}
+
+// Image drawing methods
 
 CannedVas.prototype.drawImage = function (/* too many */) {
     // Draw an image, supports too many formats to list
@@ -340,6 +447,13 @@ CannedVas.prototype.drawImageFull = function (src) {
     return this
 }
 
+CannedVas.prototype.drawImageFromRect = function (rect) {
+    // stub
+
+    this.ctx.drawImageFromRect(rect)
+    return this
+}
+
 CannedVas.prototype.drawCustomFocusRing = function (element) {
     // Not yet sure
 
@@ -384,13 +498,6 @@ CannedVas.prototype.arc = function (x, y, radius, startAngle, endAngle, anticloc
     return this
 }
 
-CannedVas.prototype.circle = function (x, y, radius) {
-    // Add a circular path at x, y
-
-    this.ctx.arc(x, y, radius, 0, Math.PI * 2)
-    return this
-}
-
 CannedVas.prototype.arcTo = function (x1, y1, x2, y2, radius) {
     // Adds an arc with the given control points, connected to previous point by
     // straight line
@@ -427,10 +534,18 @@ CannedVas.prototype.closePath = function () {
     return this
 }
 
-CannedVas.prototype.stroke = function () {
-    // Stroke the current path
+CannedVas.prototype.clear = function () {
+    // Clears the current path
 
-    this.ctx.stroke()
+    var alpha = this.ctx.globalAlpha
+    var composite = this.ctx.globalCompositeOperation
+
+    this.ctx.globalAlpha = 1
+    this.ctx.globalCompositeOperation = 'destination-out'
+    this.ctx.fill()
+    this.ctx.globalCompositeOperation = composite
+    this.ctx.globalAlpha = alpha
+
     return this
 }
 
@@ -441,10 +556,18 @@ CannedVas.prototype.fill = function () {
     return this
 }
 
-CannedVas.prototype.rect = function (x, y, w, h) {
-    // Adds a rectangle to the path?
+CannedVas.prototype.stroke = function () {
+    // Stroke the current path
 
-    this.ctx.rect(x, y, w, h)
+    this.ctx.stroke()
+    return this
+}
+
+CannedVas.prototype.paint = function () {
+    // Fill and stroke the current path
+
+    this.ctx.fill()
+    this.ctx.stroke()
     return this
 }
 
@@ -485,6 +608,13 @@ CannedVas.prototype.setTransform = function (m11, m12, m21, m22, dx, dy) {
     return this
 }
 
+CannedVas.prototype.resetTransform = function () {
+    // stub
+
+    this.ctx.resetTransform()
+    return this
+}
+
 // Constructors and other weird methods
 
 CannedVas.prototype.scrollPathIntoView = function () {
@@ -504,6 +634,12 @@ CannedVas.prototype.isPointInStroke = function (x, y) {
     // Returns true if the point is contained in the path's stoke
 
     return this.ctx.isPointInStroke(x, y)
+}
+
+CannedVas.prototype.currentPath = function () {
+    // stub
+
+    return this.ctx.currentPath
 }
 
 CannedVas.prototype.createImageData = function (width, height /* or imageData */) {
