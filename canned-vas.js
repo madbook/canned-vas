@@ -1,5 +1,6 @@
-if (typeof 'require' === 'function')
-    var _ = require('lodash')
+function _toArray (arrayLike) {
+    return Array.prototype.slice.call(arrayLike)
+}
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     exports.can = function (ctx) {
@@ -383,23 +384,26 @@ CannedVas.prototype.clipText = function (text, x, y, maxWidth) {
 CannedVas.prototype.fillText = function (text, x, y, maxWidth) {
     // Draws text
 
-    this.ctx.fillText(text, x, y, maxWidth)
+    if (maxWidth === undefined)
+        this.ctx.fillText(text, x, y)
+    else
+        this.ctx.fillText(text, x, y, maxWidth)
     return this
 }
 
 CannedVas.prototype.strokeText = function (text, x, y, maxWidth) {
     // Stroke some text
-
-    this.ctx.strokeText(text, x, y, maxWidth)
+    if (maxWidth === undefined)
+        this.ctx.strokeText(text, x, y)
+    else
+        this.ctx.strokeText(text, x, y, maxWidth)
     return this
 }
 
 CannedVas.prototype.paintText = function (text, x, y, maxWidth) {
     // Fill and stroke some text
 
-    this.ctx.fillText(text, x, y, maxWidth)
-    this.ctx.strokeText(text, x, y, maxWidth)
-    return this
+    return this.fillText(text, x, y, maxWidth).strokeText(text, x, y, maxWidth)
 }
 
 CannedVas.prototype.canvas = function () {
@@ -450,7 +454,7 @@ CannedVas.prototype.paintCanvas = function () {
 CannedVas.prototype.drawImage = function (/* too many */) {
     // Draw an image, supports too many formats to list
 
-    this.ctx.drawImage.apply(this.ctx, _.toArray(arguments))
+    this.ctx.drawImage.apply(this.ctx, _toArray(arguments))
     return this
 }
 
@@ -722,7 +726,7 @@ CannedVas.prototype.currentPath = function () {
 CannedVas.prototype.createImageData = function (width, height /* or imageData */) {
     // Creates a new imageData object
 
-    return this.ctx.createImageData.apply(this.ctx, _.toArray(arguments))
+    return this.ctx.createImageData.apply(this.ctx, _toArray(arguments))
 }
 
 CannedVas.prototype.getImageData = function (x, y, w, h) {
@@ -761,6 +765,20 @@ CannedVas.prototype.textWidth = function (text) {
     // Shortcut to measure text width
 
     return this.ctx.measureText(text).width
+}
+
+CannedVas.prototype.textHeight = function () {
+    // A little hacky, but try to get font line height by creating a temporary
+    // div and checking its height
+
+    var d = document.createElement('div')
+    document.body.appendChild(d)
+    d.innerHTML = 'm'
+    d.style.font = this.font()
+    d.style.lineHeight = '1em'
+    var h = d.offsetHeight
+    document.body.removeChild(d)
+    return h
 }
 
 CannedVas.prototype.createLinearGradient = function (x1, y1, x2, y2) {
@@ -821,14 +839,22 @@ CannedVas.prototype.clone = function () {
     return this.createCanvas().drawImage(this.vas, 0, 0)
 }
 
-CannedVas.prototype.copyStyle = function (can) {
+var PROPERTIES_TO_COPY = [
+    'fillStyle',
+    'strokeStyle',
+    'lineWidth',
+    'font',
+    'textAlign',
+    'textBaseLine',
+    'globalAlpha',
+    'globalCompositeOperation'
+]
+
+CannedVas.prototype.copyStyle = function (fromCan) {
     // Copy some context properties from another CannedVas instance
 
-    var copyProps = ['fillStyle', 'strokeStyle', 'lineWidth', 'font',
-        'textAlign', 'textBaseLine', 'globalAlpha', 'globalCompositeOperation']
-
-    copyProps.forEach(function (prop) {
-        this[prop](can[prop]())
+    PROPERTIES_TO_COPY.forEach(function (prop) {
+        this[prop](fromCan[prop]())
     }, this)
 
     return this
@@ -843,7 +869,7 @@ CannedVas.prototype.open = function (fnc) {
     // appropriate
 
     if (fnc instanceof Function)
-        fnc.apply(this, _.toArray(arguments).slice(1))
+        fnc.apply(this, _toArray(arguments).slice(1))
     return this
 }
 
@@ -859,7 +885,7 @@ CannedVas.prototype.cannery = function (fnc, list) {
     if (typeof fnc !== 'function')
         throw 'Must provide a function'
 
-    var rest = _.toArray(arguments).slice(2)
+    var rest = _toArray(arguments).slice(2)
     list.forEach(function (item) {
         fnc.apply(this, [item].concat(rest))
     }, this)
