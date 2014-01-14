@@ -74,33 +74,6 @@ CannedVas.prototype.paintStyle = function (style) {
     return this
 }
 
-CannedVas.prototype.font = function (fontType) {
-    // Get or set the `font` attribute
-
-    if (fontType === undefined)
-        return this.ctx.font
-    this.ctx.font = fontType
-    return this
-}
-
-CannedVas.prototype.textAlign = function (val) {
-    // Get or set the `textAlign` attribute
-
-    if (val === undefined)
-        return this.ctx.textAlign
-    this.ctx.textAlign = val
-    return this
-}
-
-CannedVas.prototype.textBaseLine = function (val) {
-    // Get or set the `textBaseLine` attribute
-
-    if (val === undefined)
-        return this.ctx.textBaseLine
-    this.ctx.textBaseLine = val
-    return this
-}
-
 CannedVas.prototype.lineWidth = function (width) {
     // Get or set the `lineWidth` attribute
 
@@ -110,77 +83,34 @@ CannedVas.prototype.lineWidth = function (width) {
     return this
 }
 
-CannedVas.prototype.lineCap = function (style) {
-    // Get or set the lineCap style
+/*
+    Build generic functions for the less commonly used methods
+ */
+RENDERING_CONTEXT_2D_PROPERTIES = [
+    'font',
+    'textAlign',
+    'textBaseLine',
+    'lineCap',
+    'lineDashOffset',
+    'lineJoin',
+    'miterLimit',
+    'shadowBlur',
+    'shadowColor',
+    'shadowOffsetX',
+    'shadowOffsetY'
+]
 
-    if (style === undefined)
-        return this.ctx.lineCap
-    this.ctx.lineCap = style
-    return this
-}
+RENDERING_CONTEXT_2D_PROPERTIES.forEach(function (property) {
+    CannedVas.prototype[property] = function (val) {
+        // Get or set the css property
 
-CannedVas.prototype.lineDashOffset = function (n) {
-    // Get or set the offset for the line dash
+        if (val === undefined)
+            return this.ctx[property]
 
-    if (n === undefined)
-        return this.ctx.lineDashOffset
-    this.ctx.lineDashOffset = n
-    return this
-}
-
-CannedVas.prototype.lineJoin = function (val) {
-    // Get or set the `lineJoin` attribute
-
-    if (val === undefined)
-        return this.ctx.lineJoin
-    this.ctx.lineJoin = val
-    return this
-}
-
-CannedVas.prototype.miterLimit = function (val) {
-    // Get or set the `miterLimit` attribute
-
-    if (val === undefined)
-        return this.ctx.miterLimit
-    this.ctx.miterLimit = val
-    return this
-}
-
-CannedVas.prototype.shadowBlur = function (val) {
-    // Get or set the `shadowBlur` attribute
-
-    if (val === undefined)
-        return this.ctx.shadowBlur
-    this.ctx.shadowBlur = val
-    return this
-}
-
-CannedVas.prototype.shadowColor = function (val) {
-    // Get or set the `shadowColor` attribute
-
-    if (val === undefined)
-        return this.ctx.shadowColor
-    this.ctx.shadowColor = val
-    return this
-}
-
-CannedVas.prototype.shadowOffsetX = function (val) {
-    // Get or set the `shadowOffsetX` attribute
-
-    if (val === undefined)
-        return this.ctx.shadowOffsetX
-    this.ctx.shadowOffsetX = val
-    return this
-}
-
-CannedVas.prototype.shadowOffsetY = function (val) {
-    // Get or set the `shadowOffsetY` attribute
-
-    if (val === undefined)
-        return this.ctx.shadowOffsetY
-    this.ctx.shadowOffsetY = val
-    return this
-}
+        this.ctx[property] = val
+        return this
+    }
+})
 
 CannedVas.prototype.width = function (w) {
     // Get or set the `width` attribute of the canvas
@@ -231,6 +161,34 @@ CannedVas.prototype.imageSmoothingEnabled = function (bool) {
     return this
 }
 
+// Even some css attributes!
+var CSS_PROPERTIES = [
+    'width',
+    'height',
+    'background',
+    'backgroundColor',
+    'backgroundImage',
+    'backgroundPosition',
+    'border',
+    'zIndex',
+    'position',
+    'left',
+    'top',
+    'display'
+    ]
+
+CSS_PROPERTIES.forEach(function (property) {
+    CannedVas.prototype[('style' + property[0].toUpperCase() + property.slice(1))] = function (val) {
+        // Get or set the css property
+
+        if (val === undefined)
+            return window.getComputedStyle(this.vas)[property]
+
+        this.vas.style[property] = val
+        return this
+    }
+})
+
 // Methods
 
 CannedVas.prototype.save = function () {
@@ -247,7 +205,23 @@ CannedVas.prototype.restore = function () {
     return this
 }
 
-// Drawing methods
+// Shape drawing methods
+/*
+    Each shape has 5 possible forms:
+    <shape>() - Add the shape to the current path
+    clear<Shape>() - Clear the shape
+    clip<Shape>() - Set the shape as the clipping path
+    fill<Shape>() - Fill the shape
+    stroke<Shape>() - Stroke the shape
+    paint<Shape>() - Fill and stroke the shape
+
+    Shapes available are:
+    rect - a rectangle, anchored top-left
+    box - a rectangle, anchored center
+    circle - anchored center
+    text - some text
+    canvas - a rectangle, full size of canvas
+ */
 
 CannedVas.prototype.rect = function (x, y, w, h) {
     // Adds a rectangle to the path?
@@ -261,6 +235,12 @@ CannedVas.prototype.clearRect = function (x, y, w, h) {
 
     this.ctx.clearRect(x, y, w, h)
     return this
+}
+
+CannedVas.prototype.clipRect = function (x, y, w, h) {
+    // Set a rectanglular clipping region
+
+    return this.beginPath().rectangle(x, y, w, h).clip()
 }
 
 CannedVas.prototype.fillRect = function (x, y, w, h) {
@@ -286,6 +266,48 @@ CannedVas.prototype.paintRect = function (x, y, w, h) {
     return this
 }
 
+CannedVas.prototype.box = function (x, y, w, h) {
+    // Adds a rectangle centered at (x, y)
+
+    this.ctx.rect(x - (w/2), y - (h/2), w, h)
+    return this
+}
+
+CannedVas.prototype.clearBox = function (x, y, w, h) {
+    // Clears a rectangle centered at (x, y)
+
+    this.ctx.clearRect(x - (w/2), y - (h/2), w, h)
+    return this
+}
+
+CannedVas.prototype.clipBox = function (x, y, w, h) {
+    // Set a box clipping region
+
+    return this.beginPath().box(x, y, w, h).clip()
+}
+
+CannedVas.prototype.fillBox = function (x, y, w, h) {
+    // Fills a rectangle centered at (x, y)
+
+    this.ctx.fillRect(x - (w/2), y - (h/2), w, h)
+    return this
+}
+
+CannedVas.prototype.strokeBox = function (x, y, w, h) {
+    // Stokes a rectangle centered at (x, y)
+
+    this.ctx.strokeRect(x - (w/2), y - (h/2), w, h)
+    return this
+}
+
+CannedVas.prototype.paintBox = function (x, y, w, h) {
+    // Fliis and strokes a rectangle centered at (x, y)
+
+    this.ctx.fillRect(x - (w/2), y - (h/2), w, h)
+    this.ctx.strokeRect(x - (w/2), y - (h/2), w, h)
+    return this
+}
+
 CannedVas.prototype.circle = function (x, y, radius) {
     // Add a circular path at x, y
 
@@ -306,6 +328,13 @@ CannedVas.prototype.clearCircle = function (x, y, radius) {
     this.ctx.globalAlpha = alpha
     return this
 }
+
+CannedVas.prototype.clipCircle = function (x, y, radius) {
+    // Set a circular clipping region
+
+    return this.beginPath().circle(x, y, radius).closePath().clip()
+}
+
 
 CannedVas.prototype.fillCircle = function (x, y, radius) {
     // Fill a circle
@@ -345,6 +374,12 @@ CannedVas.prototype.clearText = function (text, x, y, maxWidth) {
     return this
 }
 
+CannedVas.prototype.clipText = function (text, x, y, maxWidth) {
+    // Make text the clipping path
+    // stub
+    // relies on `text` method being doable
+}
+
 CannedVas.prototype.fillText = function (text, x, y, maxWidth) {
     // Draws text
 
@@ -380,6 +415,12 @@ CannedVas.prototype.clearCanvas = function () {
     var ctx = this.ctx
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     return this
+}
+
+CannedVas.prototype.clipCanvas = function () {
+    // Set the clipping path to the full canvas size
+    // stub
+    // not sure this even ever makes sense
 }
 
 CannedVas.prototype.fillCanvas = function () {
@@ -464,6 +505,8 @@ CannedVas.prototype.drawImageFromRect = function (rect) {
     return this
 }
 
+// not sure what to make of these yet
+
 CannedVas.prototype.drawCustomFocusRing = function (element) {
     // Not yet sure
 
@@ -491,6 +534,14 @@ CannedVas.prototype.moveTo = function (x, y) {
     // Move the context without creating a line
 
     this.ctx.moveTo(x, y)
+    return this
+}
+
+CannedVas.prototype.line = function (x1, y1, x2, y2) {
+    // Shorthand for `moveTo(x1, y1).lineTo(x2, y2)`
+
+    this.ctx.moveTo(x1, y1)
+    this.ctx.lineTo(x2, y2)
     return this
 }
 
@@ -530,19 +581,14 @@ CannedVas.prototype.quadraticCurveTo = function (cpx, cpy, x, y) {
     return this
 }
 
-CannedVas.prototype.clip = function () {
-    // Creates a clipping path from the current sub path
-
-    this.ctx.clip()
-    return this
-}
-
 CannedVas.prototype.closePath = function () {
     // Close the current path
 
     this.ctx.closePath()
     return this
 }
+
+// Painting methods
 
 CannedVas.prototype.clear = function () {
     // Clears the current path
@@ -556,6 +602,13 @@ CannedVas.prototype.clear = function () {
     this.ctx.globalCompositeOperation = composite
     this.ctx.globalAlpha = alpha
 
+    return this
+}
+
+CannedVas.prototype.clip = function () {
+    // Creates a clipping path from the current sub path
+
+    this.ctx.clip()
     return this
 }
 
@@ -604,22 +657,36 @@ CannedVas.prototype.translate = function (x, y) {
     return this
 }
 
+CannedVas.prototype.translateToCenter = function () {
+    // Convenience for translating to the center of the canvas
+
+    this.ctx.translate(this.vas.width / 2 | 0, this.vas.height / 2 | 0)
+    return this
+}
+
+CannedVas.prototype.translateFromCenter = function () {
+    // Convenience for translating from center back to top left
+
+    this.ctx.translate(this.vas.width / -2 | 0, this.vas.height / -2 | 0)
+    return this
+}
+
 CannedVas.prototype.transform = function (m11, m12, m21, m22, dx, dy) {
-    // Not sure yet
+    // Apply a 2x2 matrix transform and a translate, relative to current?
 
     this.ctx.transform(m11, m12, m21, m22, dx, dy)
     return this
 }
 
 CannedVas.prototype.setTransform = function (m11, m12, m21, m22, dx, dy) {
-    // Not sure yet
+    // Set the matrix transform and translate, absolute?
 
     this.ctx.setTransform(m11, m12, m21, m22, dx, dy)
     return this
 }
 
 CannedVas.prototype.resetTransform = function () {
-    // stub
+    // Clear any existing transforms
 
     this.ctx.resetTransform()
     return this
@@ -727,6 +794,16 @@ CannedVas.prototype.toBlob = function (callback, type, jpegQuality) {
 }
 
 // Special
+
+CannedVas.prototype.size = function (dimensions) {
+    // Get or set the width and height of the canvas
+
+    if (dimensions === undefined)
+        return { width: this.vas.width, height: this.vas.height }
+    this.width(dimensions.width)
+    this.height(dimensions.height)
+    return this
+}
 
 CannedVas.prototype.createCanvas = function () {
     // Get another canvas (wrapped in a CannedVas object) of the same dimensions

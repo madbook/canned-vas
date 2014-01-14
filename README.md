@@ -5,6 +5,18 @@ A simple wrapper for the HTML `<canvas>` element and `CanvasRenderingContext2d`
 that allows for chainable method calls.  Provides aliases for all standard
 canvas methods, as well as get/set methods for canvas and context properties.
 
+#### Goals
+
+* Provide more convenient access to the canvas drawing api through _chaining_
+* Make the api more _consitent_ by adding "missing" methods
+* _Extend_ the api with more useful drawing methods
+
+
+Method Chaining
+--------
+
+Every standard property of the `HTMLCanvasElement` and `CanvasRenderingContext2d` objects have been aliased, and all allow for chaining except where the method must return some other value.
+
 Observe:
 
 ```
@@ -16,120 +28,56 @@ can.fillStyle('rgb(255, 0, 0)').fillRect(50, 50, 100, 100)
 
 ```
 
-Rendering Context
+Extended API
 --------
 
-The 2d rendering context object is stored as the `ctx` property for direct access when necessary.
-
-### Methods
-
-`CannedVas` supports all standard canvas api methods, and each method returns the `CannedVas` instance to allow for chaining.
-
-- save
-- restore
-- rotate
-- scale
-- translate
-- transform
-- setTransform
-- clearRect
-- fillRect
-- strokeRect
-- fillText
-- strokeText
-- drawImage
-- beginPath
-- moveTo
-- lineTo
-- arc
-- arcTo
-- bezierCurveTo
-- quadraticCurveTo
-- clip
-- closePath
-- stroke
-- fill
-- rect
-- drawCustomFocusRing
-- drawSystemFocusRing
-- scrollPathIntoView
-- isPointInPath
-- isPointInStroke
-- createImageData
-- getImageData
-- putImageData
-- measureText
-- createLinearGradient
-- createRadialGradient
-- createPattern
+There are many additional drawing methods available.  All have been added with the goal of making the API more convenient and consistent in mind.
 
 ### Attributes
 
-`CannedVas` also supports _getting_ and _setting_ all properties with functions.  For all attributes, a function of the same name exists.  If no value is passed, it returns the current value.  If a value is passed, it sets the attribute and returns the `CannedVas` instance for further chaining.
+All attributes for both the `canvas` and the `context` can be set or retrieved with the function of the same name.
 
-- globalCompositeOperation
-- globalAlpha
-- fillStyle
-- strokeStyle
-- font
-- textAlign
-- textBaseLine
-- lineWidth
-- lineCap
-- lineDashOffset
-- lineJoin
-- miterLimit
-- shadowBlur
-- shadowColor
-- shadowOffsetX
-- shadowOffsetY
-- getLineDash
-- setLineDash
-- lineDash
+For example, copying the fill style from one `CannedVas` to another:
 
-Canvas Element
---------
+```
+can1.fillStyle(can2.fillStyle())
+``
 
-The `<canvas>` element is stored in the `can` attribute.  There are a few methods to interact with it directly as well.
+### Painting
 
-- toDataURL
-- toBlob
-- width
-- height
+The standard API provides two methods of using a path - `fill`, `stroke`, and `clip`. __CannedVas__ adds two additional painting methods.
 
-Custom Methods
---------
+- `clear` erases the current path, similar to `clearRect`
+- `paint` performs a _fill_ and a _stroke_, for convenience
 
-Finally, there are several non-standard methods included for convenience.
+### Paths
 
-- compositeOperation
-- alpha
-- drawImageAt
-- drawImageIn
-- drawImageCrop
-- drawImageCropIn
-- drawImageCentered
-- drawImageFull
-- circle
-- canvas
-- clearCanvas
-- strokeCanvas
-- fillCanvas
-- clearCircle
-- clearText
-- paintRect
-- paintText
-- fillCircle
-- paintCircle
-- strokeCircle
-- imageData
-- textWidth
-- createCanvas
-- clone
-- open
-- cannery
+__CannedVas__ adds one additional path-drawing method to the API.
 
-More
---------
+- `line` accepts two points as arguments, and adds a line between them
 
-There are probably a few methods I forgot to mention, and there is still a lot of work to be done specifically in cross-browser testing and implementing browser-specific methods.  Still, its nice and useable for most cases as-is.
+### Shapes
+
+The standard API only provides one convenience method for drawing a shape (the rectangle).  The `CannedVas` api provides several additional shapes.
+
+- `box` - same as _rect_, but anchored in the middle rather than top-left
+- `circle`
+- `canvas` - same as _rect_, but automatically the full size of the canvas
+
+Along with `rect`, each of these shapes has a _shape_ method to add it to the current path and a _paint_ method for each of the painting methods listed above.  For example:
+
+```
+can
+    .save()
+    .clearCanvas()
+    .fillCanvas()
+    .paintCircle(50, 50, 50)
+    .clipCircle(50, 50, 50)
+    .fillBox(50, 50, 10, 20)
+    .restore()
+```
+
+### Text
+
+The same methods that exist for each of the shapes listed above exist for rendering text, with the __exception__ of the _shape_ method and a _clear_ method.  If i figure out how to add text to the current path without drawing it then I will add those in.
+
