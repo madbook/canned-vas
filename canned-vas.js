@@ -3,11 +3,7 @@ function _toArray (arrayLike) {
 }
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-    exports.can = function (ctx) {
-        // Simple wrapper utility for canvas drawing, allows for method chaining
-
-        return new CannedVas(ctx)
-    }
+    exports.can = CannedVas
 }
 
 var PI = Math.PI
@@ -19,6 +15,10 @@ function CannedVas (ctx) {
 
     this.ctx = (ctx instanceof HTMLCanvasElement) ? ctx.getContext('2d') : ctx
     this.vas = this.ctx.canvas
+}
+
+CannedVas.can = function (ctxOrCanvas) {
+    return new CannedVas(ctxOrCanvas)
 }
 
 // Get / Set methods
@@ -719,12 +719,17 @@ CannedVas.prototype.isPointInStroke = function (x, y) {
 
 CannedVas.prototype.currentPath = function () {
     // stub
+    // i think this might not have any support atm
 
     return this.ctx.currentPath
 }
 
 CannedVas.prototype.createImageData = function (width, height /* or imageData */) {
     // Creates a new imageData object
+    if (typeof arguments[0] !== 'object') {
+        arguments[0] = arguments[0] || this.width()
+        arguments[1] = arguments[1] || this.height()
+    }
 
     return this.ctx.createImageData.apply(this.ctx, _toArray(arguments))
 }
@@ -732,12 +737,20 @@ CannedVas.prototype.createImageData = function (width, height /* or imageData */
 CannedVas.prototype.getImageData = function (x, y, w, h) {
     // Get an imageData object of the specified rectangle
 
+    x |= 0
+    y |= 0
+    w = w || this.width()
+    h = h || this.height()
+
     return this.ctx.getImageData(x, y, w, h)
 }
 
 CannedVas.prototype.putImageData = function (imageData, x, y, sx, sy, sw, sh) {
     // Put image data onto the canvas
     // Note that only x and y are required
+
+    x |= 0
+    y |= 0
 
     if (sx === undefined)
         this.ctx.putImageData(imageData, x, y)
@@ -890,4 +903,69 @@ CannedVas.prototype.cannery = function (fnc, list) {
         fnc.apply(this, [item].concat(rest))
     }, this)
     return this
+}
+
+CannedVas.prototype.filter = function (filter) {
+    // Run the canvas through a filter function.
+
+    var oldData = this.getImageData()
+    var newData = this.createImageData(oldData)
+    this.open(filter, oldData, newData)
+    this.putImageData(newData)
+    return this
+}
+
+CannedVas.createMatrixFilter = function (matrix) {
+    // Returns a function that can be passed to a CannedVas instance's `filter` method
+
+    return function (input, output) {
+        CannedVas.applyMatrixFilter(input, output, matrix)
+    }
+}
+
+CannedVas.applyMatrixFilter = function (input, output, matrix) {
+    // Applies a matrix filter to the `input` imageData object, putting the
+    // results into the `output` object
+
+    var w = input.width
+    var h = input.height
+    var mw = matrix[0].length
+    var mh = matrix.length
+    var mw2 = mw / 2 | 0
+    var mh2 = mh / 2 | 0
+    var vals = [0, 0, 0]
+
+    var x, y, i, mx, my, nx, ny, ni, c
+
+    input = input.data
+    output = output.data
+
+    // for each x/y value, for each neighbor, for each channel
+    y = h
+    while ((x = w), y--)
+    while (x--, (i = (((y * w) + x) * 4)), (my = mh), x) {
+        c = vals.length
+        while (c--)
+            vals[c] = 0
+
+        while (my--)
+        if ((ny = my - mh2 + y) && ny >= 0 && ny < h && (mx = mw))
+        while (mx--)
+        if ((nx = mx - mw2 + x) && nx >= 0 && nx < w && (ni = (((ny * w) + nx) * 4), c = 3))
+        while (c--)
+            vals[c] += input[ni + c] * matrix[my][mx]
+
+        c = vals.length
+        while (c--)
+            output[i + c] = vals[c]
+    }
+
+    // straight copy alpha channel
+    y = h
+    while (x = w, y--)
+    while (x--, i = (((y * w) + x) * 4), x)
+        output[i + 3] = input[i + 3]
+
+    // get index of x/y
+    // (((y * w) + x) * 4)
 }
