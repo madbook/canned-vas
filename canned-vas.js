@@ -3,7 +3,7 @@ function _toArray (arrayLike) {
 }
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-    exports.can = CannedVas
+    module.exports = CannedVas
 }
 
 var PI = Math.PI
