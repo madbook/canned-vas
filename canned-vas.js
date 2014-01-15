@@ -267,6 +267,13 @@ CannedVas.prototype.paintRect = function (x, y, w, h) {
     return this
 }
 
+CannedVas.prototype.imageRect = function (image, x, y, w, h) {
+    // Draw the image into the rect
+
+    this.ctx.drawImage(image, x, y, w, h)
+    return this
+}
+
 CannedVas.prototype.box = function (x, y, w, h) {
     // Adds a rectangle centered at (x, y)
 
@@ -306,6 +313,13 @@ CannedVas.prototype.paintBox = function (x, y, w, h) {
 
     this.ctx.fillRect(x - (w/2), y - (h/2), w, h)
     this.ctx.strokeRect(x - (w/2), y - (h/2), w, h)
+    return this
+}
+
+CannedVas.prototype.imageBox = function (image, x, y, w, h) {
+    // Draw image into the box
+
+    this.ctx.drawImage(image, x - (w/2), y - (h/2), w, h)
     return this
 }
 
@@ -353,6 +367,13 @@ CannedVas.prototype.paintCircle = function (x, y, radius) {
     // Fill and stroke a circle
 
     return this.beginPath().circle(x, y, radius).fill().stroke()
+}
+
+CannedVas.prototype.imageCircle = function (image, x, y, radius) {
+    // Paint image into a circle
+    var w = radius * 2
+    this.save().clipCircle(x, y, radius).imageBox(image, x, y, w, w).restore()
+    return this
 }
 
 CannedVas.prototype.text = function (text, x, y, maxWidth) {
@@ -406,6 +427,8 @@ CannedVas.prototype.paintText = function (text, x, y, maxWidth) {
     return this.fillText(text, x, y, maxWidth).strokeText(text, x, y, maxWidth)
 }
 
+// imageText - stub - if we can do text and cropText, then we can do this
+
 CannedVas.prototype.canvas = function () {
     // Add a rect the size of the canvas to the subpath
 
@@ -450,6 +473,15 @@ CannedVas.prototype.paintCanvas = function () {
 }
 
 // Image drawing methods
+// given both names for consistency with both sets of methods.  Maybe not perfect
+CannedVas.prototype.imageCanvas =
+CannedVas.prototype.drawImageCanvas = function (src) {
+    // Draw an image (or canvas) to cover the entire canvas
+
+    var ctx = this.ctx
+    ctx.drawImage(src, 0, 0, src.width, src.height, 0, 0, ctx.canvas.width, ctx.canvas.height)
+    return this
+}
 
 CannedVas.prototype.drawImage = function (/* too many */) {
     // Draw an image, supports too many formats to list
@@ -491,14 +523,6 @@ CannedVas.prototype.drawImageCentered = function (src) {
 
     var ctx = this.ctx
     ctx.drawImage(src, -src.width/2, -src.height/2, src.width, src.height)
-    return this
-}
-
-CannedVas.prototype.drawImageCanvas = function (src) {
-    // Draw an image (or canvas) to cover the entire canvas
-
-    var ctx = this.ctx
-    ctx.drawImage(src, 0, 0, src.width, src.height, 0, 0, ctx.canvas.width, ctx.canvas.height)
     return this
 }
 
