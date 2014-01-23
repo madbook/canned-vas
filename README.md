@@ -41,7 +41,7 @@ For example, copying the fill style from one `CannedVas` to another:
 
 ```
 can1.fillStyle(can2.fillStyle())
-``
+```
 
 ### Painting
 
