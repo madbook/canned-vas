@@ -190,6 +190,14 @@ CSS_PROPERTIES.forEach(function (property) {
     }
 })
 
+CannedVas.prototype.style = function (property, val) {
+    if (val === undefined)
+        return window.getComputedStyle(this.vas)[property]
+
+    this.vas.style[property] = val
+    return this
+}
+
 // Methods
 
 CannedVas.prototype.save = function () {
