@@ -84,35 +84,6 @@ CannedVas.prototype.lineWidth = function (width) {
     return this
 }
 
-/*
-    Build generic functions for the less commonly used methods
- */
-RENDERING_CONTEXT_2D_PROPERTIES = [
-    'font',
-    'textAlign',
-    'textBaseLine',
-    'lineCap',
-    'lineDashOffset',
-    'lineJoin',
-    'miterLimit',
-    'shadowBlur',
-    'shadowColor',
-    'shadowOffsetX',
-    'shadowOffsetY'
-]
-
-RENDERING_CONTEXT_2D_PROPERTIES.forEach(function (property) {
-    CannedVas.prototype[property] = function (val) {
-        // Get or set the css property
-
-        if (val === undefined)
-            return this.ctx[property]
-
-        this.ctx[property] = val
-        return this
-    }
-})
-
 CannedVas.prototype.width = function (w) {
     // Get or set the `width` attribute of the canvas
 
@@ -162,6 +133,35 @@ CannedVas.prototype.imageSmoothingEnabled = function (bool) {
     return this
 }
 
+/*
+    Build generic functions for the less commonly used methods
+ */
+RENDERING_CONTEXT_2D_PROPERTIES = [
+    'font',
+    'textAlign',
+    'textBaseLine',
+    'lineCap',
+    'lineDashOffset',
+    'lineJoin',
+    'miterLimit',
+    'shadowBlur',
+    'shadowColor',
+    'shadowOffsetX',
+    'shadowOffsetY'
+]
+
+RENDERING_CONTEXT_2D_PROPERTIES.forEach(function (property) {
+    CannedVas.prototype[property] = function (val) {
+        // Get or set the css property
+
+        if (val === undefined)
+            return this.ctx[property]
+
+        this.ctx[property] = val
+        return this
+    }
+})
+
 // Even some css attributes!
 var CSS_PROPERTIES = [
     'width',
@@ -201,146 +201,110 @@ CannedVas.prototype.style = function (property, val) {
 // Methods
 
 CannedVas.prototype.save = function () {
-    // Save the context
-
     this.ctx.save()
     return this
 }
 
 CannedVas.prototype.restore = function () {
-    // Restore a saved context
-
     this.ctx.restore()
     return this
 }
 
-// Shape drawing methods
-/*
-    Each shape has 5 possible forms:
-    <shape>() - Add the shape to the current path
-    clear<Shape>() - Clear the shape
-    clip<Shape>() - Set the shape as the clipping path
-    fill<Shape>() - Fill the shape
-    stroke<Shape>() - Stroke the shape
-    paint<Shape>() - Fill and stroke the shape
 
-    Shapes available are:
-    rect - a rectangle, anchored top-left
-    box - a rectangle, anchored center
-    circle - anchored center
-    text - some text
-    canvas - a rectangle, full size of canvas
- */
+
+//  ##   #                             ###                      #
+// #  #  #                             #  #
+//  #    ###    ###  ###    ##         #  #  ###    ###  #  #  ##    ###    ###
+//   #   #  #  #  #  #  #  # ##        #  #  #  #  #  #  #  #   #    #  #  #  #
+// #  #  #  #  # ##  #  #  ##          #  #  #     # ##  ####   #    #  #   ##
+//  ##   #  #   # #  ###    ##         ###   #      # #  ####  ###   #  #  #
+//                   #                                                      ###
+
+// R E C T
+// Rectangle, anchored top-left
 
 CannedVas.prototype.rect = function (x, y, w, h) {
-    // Adds a rectangle to the path?
-
     this.ctx.rect(x, y, w, h)
     return this
 }
 
 CannedVas.prototype.clearRect = function (x, y, w, h) {
-    // Clear a portion of the canvas
-
     this.ctx.clearRect(x, y, w, h)
     return this
 }
 
 CannedVas.prototype.clipRect = function (x, y, w, h) {
-    // Set a rectanglular clipping region
-
     return this.beginPath().rectangle(x, y, w, h).clip()
 }
 
 CannedVas.prototype.fillRect = function (x, y, w, h) {
-
-    // Fill a portion of the canvas
-
-    this.ctx.fillRect(x, y, w, h)
+this.ctx.fillRect(x, y, w, h)
     return this
 }
 
 CannedVas.prototype.strokeRect = function (x, y, w, h) {
-    // Stroke a rectangle
-
     this.ctx.strokeRect(x, y, w, h)
     return this
 }
 
 CannedVas.prototype.paintRect = function (x, y, w, h) {
-    // Fill and stroke a rectangle
-
     this.ctx.fillRect(x, y, w, h)
     this.ctx.strokeRect(x, y, w, h)
     return this
 }
 
 CannedVas.prototype.imageRect = function (image, x, y, w, h) {
-    // Draw the image into the rect
-
     this.ctx.drawImage(image, x, y, w, h)
     return this
 }
 
-CannedVas.prototype.box = function (x, y, w, h) {
-    // Adds a rectangle centered at (x, y)
+// B O X
+// Rectangle, anchored center
 
+CannedVas.prototype.box = function (x, y, w, h) {
     this.ctx.rect(x - (w/2), y - (h/2), w, h)
     return this
 }
 
 CannedVas.prototype.clearBox = function (x, y, w, h) {
-    // Clears a rectangle centered at (x, y)
-
     this.ctx.clearRect(x - (w/2), y - (h/2), w, h)
     return this
 }
 
 CannedVas.prototype.clipBox = function (x, y, w, h) {
-    // Set a box clipping region
-
     return this.beginPath().box(x, y, w, h).clip()
 }
 
 CannedVas.prototype.fillBox = function (x, y, w, h) {
-    // Fills a rectangle centered at (x, y)
-
     this.ctx.fillRect(x - (w/2), y - (h/2), w, h)
     return this
 }
 
 CannedVas.prototype.strokeBox = function (x, y, w, h) {
-    // Stokes a rectangle centered at (x, y)
-
     this.ctx.strokeRect(x - (w/2), y - (h/2), w, h)
     return this
 }
 
 CannedVas.prototype.paintBox = function (x, y, w, h) {
-    // Fliis and strokes a rectangle centered at (x, y)
-
     this.ctx.fillRect(x - (w/2), y - (h/2), w, h)
     this.ctx.strokeRect(x - (w/2), y - (h/2), w, h)
     return this
 }
 
 CannedVas.prototype.imageBox = function (image, x, y, w, h) {
-    // Draw image into the box
-
     this.ctx.drawImage(image, x - (w/2), y - (h/2), w, h)
     return this
 }
 
-CannedVas.prototype.circle = function (x, y, radius) {
-    // Add a circular path at x, y
+// C I R C L E
+// 360 degree arc, anchored center
 
+CannedVas.prototype.circle = function (x, y, radius) {
     this.ctx.arc(x, y, radius, 0, TAU)
     return this
 }
 
 CannedVas.prototype.clearCircle = function (x, y, radius) {
-    // Clear a circular area
-
     var alpha = this.ctx.globalAlpha
     var composite = this.ctx.globalCompositeOperation
 
@@ -353,46 +317,124 @@ CannedVas.prototype.clearCircle = function (x, y, radius) {
 }
 
 CannedVas.prototype.clipCircle = function (x, y, radius) {
-    // Set a circular clipping region
-
     return this.beginPath().circle(x, y, radius).closePath().clip()
 }
 
 
 CannedVas.prototype.fillCircle = function (x, y, radius) {
-    // Fill a circle
-
     return this.beginPath().circle(x, y, radius).fill()
 }
 
 CannedVas.prototype.strokeCircle = function (x, y, radius) {
-    // Stroke a circle
-
     return this.beginPath().circle(x, y, radius).stroke()
 }
 
 CannedVas.prototype.paintCircle = function (x, y, radius) {
-    // Fill and stroke a circle
-
     return this.beginPath().circle(x, y, radius).fill().stroke()
 }
 
 CannedVas.prototype.imageCircle = function (image, x, y, radius) {
-    // Paint image into a circle
     var w = radius * 2
     this.save().clipCircle(x, y, radius).imageBox(image, x, y, w, w).restore()
     return this
 }
 
-CannedVas.prototype.text = function (text, x, y, maxWidth) {
-    // Add text to the subpath
-    // stub
-    // not sure if this one is possible...
+// E L L I P S E
+// An oval, anchored at center
+
+CannedVas.prototype.ellipse = function (x, y, w, h) {
+    var kappa = 0.5522848
+    var w2 = w / 2
+    var h2 = h / 2
+    var ox = w2 * kappa // control point offset horizontal
+    var oy = h2 * kappa // control point offset vertical
+    var x1 = x + w2     // x
+    var y1 = y + h2     // y
+    var x2 = x - w2     // xe
+    var y2 = y - h2     // ye
+
+    this.moveTo(x1, y)
+        .bezierCurveTo(x1, y - oy, x - ox, y1, x, y1)
+        .bezierCurveTo(x + ox, y1, x2, y - oy, x2, y)
+        .bezierCurveTo(x2, y + oy, x + ox, y2, x, y2)
+        .bezierCurveTo(x - ox, y2, x1, y + oy, x1, y)
+    return this
 }
 
-CannedVas.prototype.clearText = function (text, x, y, maxWidth) {
-    // Clear area using text
+CannedVas.prototype.clearEllipse = function (x, y, w, h) {
+    var alpha = this.ctx.globalAlpha
+    var composite = this.ctx.globalCompositeOperation
 
+    this.ctx.globalAlpha = 1
+    this.ctx.globalCompositeOperation = 'destination-out'
+    this.beginPath().ellipse(x, y, w, h).closePath().fill()
+    this.ctx.globalCompositeOperation = composite
+    this.ctx.globalAlpha = alpha
+    return this
+}
+
+CannedVas.prototype.clipEllipse = function (x, y, w, h) {
+    return this.beginPath().ellipse(x, y, w, h).closePath().clip()
+}
+
+CannedVas.prototype.fillEllipse = function (x, y, w, h) {
+    return this.beginPath().ellipse(x, y, w, h).closePath().fill()
+}
+
+CannedVas.prototype.strokeEllipse = function (x, y, w, h) {
+    return this.beginPath().ellipse(x, y, w, h).closePath().stroke()
+}
+
+CannedVas.prototype.paintEllipse = function (x, y, w, h) {
+    return this.beginPath().ellipse(x, y, w, h).closePath().paint()
+}
+
+CannedVas.prototype.imageEllipse = function (img, x, y, w, h) {
+    this.save().beginPath().ellipse(x, y, w, h).closePath().clip()
+        .imageBox(img, x, y, w, h).restore()
+    return this
+}
+
+// C A N V A S
+// Draw to the full size of the canvas
+
+CannedVas.prototype.canvas = function () {
+    this.rect(0, 0, this.vas.width, this.vas.height)
+    return this
+}
+
+CannedVas.prototype.clearCanvas = function () {
+    var ctx = this.ctx
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+    return this
+}
+
+CannedVas.prototype.fillCanvas = function () {
+    this.ctx.fillRect(0, 0, this.vas.width, this.vas.height)
+    return this
+}
+
+CannedVas.prototype.strokeCanvas = function () {
+    this.ctx.strokeRect(0, 0, this.vas.width, this.vas.height)
+    return this
+}
+
+CannedVas.prototype.paintCanvas = function () {
+    this.ctx.fillRect(0, 0, this.vas.width, this.vas.height)
+    this.ctx.strokeRect(0, 0, this.vas.width, this.vas.height)
+    return this
+}
+
+CannedVas.prototype.imageCanvas = function (src) {
+    var ctx = this.ctx
+    ctx.drawImage(src, 0, 0, src.width, src.height, 0, 0, ctx.canvas.width, ctx.canvas.height)
+    return this
+}
+
+// T E X T
+// Paint some text, does not support all methods!
+
+CannedVas.prototype.clearText = function (text, x, y, maxWidth) {
     var alpha = this.ctx.globalAlpha
     var composite = this.ctx.globalCompositeOperation
 
@@ -404,15 +446,7 @@ CannedVas.prototype.clearText = function (text, x, y, maxWidth) {
     return this
 }
 
-CannedVas.prototype.clipText = function (text, x, y, maxWidth) {
-    // Make text the clipping path
-    // stub
-    // relies on `text` method being doable
-}
-
 CannedVas.prototype.fillText = function (text, x, y, maxWidth) {
-    // Draws text
-
     if (maxWidth === undefined)
         this.ctx.fillText(text, x, y)
     else
@@ -421,7 +455,6 @@ CannedVas.prototype.fillText = function (text, x, y, maxWidth) {
 }
 
 CannedVas.prototype.strokeText = function (text, x, y, maxWidth) {
-    // Stroke some text
     if (maxWidth === undefined)
         this.ctx.strokeText(text, x, y)
     else
@@ -430,66 +463,73 @@ CannedVas.prototype.strokeText = function (text, x, y, maxWidth) {
 }
 
 CannedVas.prototype.paintText = function (text, x, y, maxWidth) {
-    // Fill and stroke some text
-
     return this.fillText(text, x, y, maxWidth).strokeText(text, x, y, maxWidth)
 }
 
-// imageText - stub - if we can do text and cropText, then we can do this
+// L I N E
+// Straight line
 
-CannedVas.prototype.canvas = function () {
-    // Add a rect the size of the canvas to the subpath
-
-    this.rect(0, 0, this.vas.width, this.vas.height)
+CannedVas.prototype.line = function (x1, y1, x2, y2) {
+    this.ctx.moveTo(x1, y1)
+    this.ctx.lineTo(x2, y2)
     return this
 }
 
-CannedVas.prototype.clearCanvas = function () {
-    // Erase the entire canvas
+CannedVas.prototype.clearLine = function (x1, y1, x2, y2) {
+    var alpha = this.ctx.globalAlpha
+    var composite = this.ctx.globalCompositeOperation
 
-    var ctx = this.ctx
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+    this.ctx.globalAlpha = 1
+    this.ctx.globalCompositeOperation = 'destination-out'
+    this.strokeLine(x1, y1, x2, y2)
+    this.ctx.globalCompositeOperation = composite
+    this.ctx.globalAlpha = alpha
     return this
 }
 
-CannedVas.prototype.clipCanvas = function () {
-    // Set the clipping path to the full canvas size
-    // stub
-    // not sure this even ever makes sense
-}
-
-CannedVas.prototype.fillCanvas = function () {
-    // Fill the entire canvas
-
-    this.ctx.fillRect(0, 0, this.vas.width, this.vas.height)
+CannedVas.prototype.strokeLine = function (x1, y1, x2, y2) {
+    this.ctx.beginPath()
+    this.ctx.moveTo(x1, y1)
+    this.ctx lineTo(x2, y2)
+    this.ctx.stroke()
     return this
 }
 
-CannedVas.prototype.strokeCanvas = function () {
-    // Stroke the entire canvas
+// A R C
+// Arc
 
-    this.ctx.strokeRect(0, 0, this.vas.width, this.vas.height)
+CannedVas.prototype.arc = function (x, y, radius, startAngle, endAngle, anticlockwise) {
+    this.ctx.arc(x, y, radius, startAngle, endAngle, anticlockwise)
     return this
 }
 
-CannedVas.prototype.paintCanvas = function () {
-    // Fill and stroke the entire canvas
+CannedVas.prototype.clearArc = function (x, y, radius, startAngle, endAngle, anticlockwise) {
+    var alpha = this.ctx.globalAlpha
+    var composite = this.ctx.globalCompositeOperation
 
-    this.ctx.fillRect(0, 0, this.vas.width, this.vas.height)
-    this.ctx.strokeRect(0, 0, this.vas.width, this.vas.height)
+    this.ctx.globalAlpha = 1
+    this.ctx.globalCompositeOperation = 'destination-out'
+    this.strokeArc(x, y, radius, startAngle, endAngle, anticlockwise)
+    this.ctx.globalCompositeOperation = composite
+    this.ctx.globalAlpha = alpha
     return this
 }
 
-// Image drawing methods
-// given both names for consistency with both sets of methods.  Maybe not perfect
-CannedVas.prototype.imageCanvas =
-CannedVas.prototype.drawImageCanvas = function (src) {
-    // Draw an image (or canvas) to cover the entire canvas
-
-    var ctx = this.ctx
-    ctx.drawImage(src, 0, 0, src.width, src.height, 0, 0, ctx.canvas.width, ctx.canvas.height)
-    return this
+CannedVas.prototype.strokeArc = function (x, y, radius, startAngle, endAngle, anticlockwise) {
+    this.ctx.beginPath()
+    this.ctx.arc(x, y, radius, startAngle, endAngle, anticlockwise)
+    this.ctx.stroke()
 }
+
+
+
+// ###                                 ###                      #
+//  #                                  #  #
+//  #    # #    ###   ###   ##         #  #  ###    ###  #  #  ##    ###    ###
+//  #    ####  #  #  #  #  # ##        #  #  #  #  #  #  #  #   #    #  #  #  #
+//  #    #  #  # ##   ##   ##          #  #  #     # ##  ####   #    #  #   ##
+// ###   #  #   # #  #      ##         ###   #      # #  ####  ###   #  #  #
+//                    ###                                                   ###
 
 CannedVas.prototype.drawImage = function (/* too many */) {
     // Draw an image, supports too many formats to list
@@ -534,101 +574,62 @@ CannedVas.prototype.drawImageCentered = function (src) {
     return this
 }
 
-CannedVas.prototype.drawImageFromRect = function (rect) {
-    // stub
 
-    this.ctx.drawImageFromRect(rect)
-    return this
-}
 
-// not sure what to make of these yet
-
-CannedVas.prototype.drawCustomFocusRing = function (element) {
-    // Not yet sure
-
-    this.ctx.drawCustomFocusRing(element)
-    return this
-}
-
-CannedVas.prototype.drawSystemFocusRing = function (element) {
-    // Not sure yet
-
-    this.ctx.drawSystemFocusRing(element)
-    return this
-}
-
-// Path drawing methods
+// ###          #    #           ###          #    ##       #   #
+// #  #         #    #           #  #               #       #
+// #  #   ###  ###   ###         ###   #  #  ##     #     ###  ##    ###    ###
+// ###   #  #   #    #  #        #  #  #  #   #     #    #  #   #    #  #  #  #
+// #     # ##   #    #  #        #  #  #  #   #     #    #  #   #    #  #   ##
+// #      # #    ##  #  #        ###    ###  ###   ###    ###  ###   #  #  #
+//                                                                          ###
 
 CannedVas.prototype.beginPath = function () {
-    // Begin a new path
-
     this.ctx.beginPath()
     return this
 }
 
 CannedVas.prototype.moveTo = function (x, y) {
-    // Move the context without creating a line
-
     this.ctx.moveTo(x, y)
     return this
 }
 
-CannedVas.prototype.line = function (x1, y1, x2, y2) {
-    // Shorthand for `moveTo(x1, y1).lineTo(x2, y2)`
-
-    this.ctx.moveTo(x1, y1)
-    this.ctx.lineTo(x2, y2)
-    return this
-}
-
 CannedVas.prototype.lineTo = function (x, y) {
-    // Move the context and create a line from the last location
-
     this.ctx.lineTo(x, y)
     return this
 }
 
-CannedVas.prototype.arc = function (x, y, radius, startAngle, endAngle, anticlockwise) {
-    // Adds an arc to the path at (x, y),
-
-    this.ctx.arc(x, y, radius, startAngle, endAngle, anticlockwise)
-    return this
-}
-
 CannedVas.prototype.arcTo = function (x1, y1, x2, y2, radius) {
-    // Adds an arc with the given control points, connected to previous point by
-    // straight line
-
     this.ctx.arcTo(x1, y1, x2, y2, radius)
     return this
 }
 
 CannedVas.prototype.bezierCurveTo = function (cp1x, cp1y, cp2x, cp2y, x, y) {
-    // Adds a bezier curve with the given control points?
-
     this.ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
     return this
 }
 
 CannedVas.prototype.quadraticCurveTo = function (cpx, cpy, x, y) {
-    // Adds a quadratic curve with the given control point
-
     this.ctx.quadraticCurveTo(cpx, cpy, x, y)
     return this
 }
 
 CannedVas.prototype.closePath = function () {
-    // Close the current path
-
     this.ctx.closePath()
     return this
 }
 
-// Painting methods
+
+
+// ###          #           #     #
+// #  #                     #
+// #  #   ###  ##    ###   ###   ##    ###    ###
+// ###   #  #   #    #  #   #     #    #  #  #  #
+// #     # ##   #    #  #   #     #    #  #   ##
+// #      # #  ###   #  #    ##  ###   #  #  #
+//                                            ###
 
 CannedVas.prototype.clear = function () {
-    // Clears the current path
-
     var alpha = this.ctx.globalAlpha
     var composite = this.ctx.globalCompositeOperation
 
@@ -642,35 +643,34 @@ CannedVas.prototype.clear = function () {
 }
 
 CannedVas.prototype.clip = function () {
-    // Creates a clipping path from the current sub path
-
     this.ctx.clip()
     return this
 }
 
 CannedVas.prototype.fill = function () {
-    // Fills the sub path
-
     this.ctx.fill()
     return this
 }
 
 CannedVas.prototype.stroke = function () {
-    // Stroke the current path
-
     this.ctx.stroke()
     return this
 }
 
 CannedVas.prototype.paint = function () {
-    // Fill and stroke the current path
-
     this.ctx.fill()
     this.ctx.stroke()
     return this
 }
 
-// Context transforms
+
+
+// ###                              #
+//  #                              # #
+//  #    ###    ###  ###    ###    #     ##   ###   # #    ###
+//  #    #  #  #  #  #  #  ##     ###   #  #  #  #  ####  ##
+//  #    #     # ##  #  #    ##    #    #  #  #     #  #    ##
+//  #    #      # #  #  #  ###     #     ##   #     #  #  ###
 
 CannedVas.prototype.rotate = function (angle) {
     // Rotate the context around the origin
@@ -728,7 +728,14 @@ CannedVas.prototype.resetTransform = function () {
     return this
 }
 
-// Constructors and other weird methods
+
+
+// #  #   #
+// ####
+// ####  ##     ###    ##
+// #  #   #    ##     #
+// #  #   #      ##   #
+// #  #  ###   ###     ##
 
 CannedVas.prototype.scrollPathIntoView = function () {
     // Not sure yet
@@ -747,6 +754,23 @@ CannedVas.prototype.isPointInStroke = function (x, y) {
     // Returns true if the point is contained in the path's stoke
 
     return this.ctx.isPointInStroke(x, y)
+}
+
+
+// not sure what to make of these yet
+
+CannedVas.prototype.drawCustomFocusRing = function (element) {
+    // Not yet sure
+
+    this.ctx.drawCustomFocusRing(element)
+    return this
+}
+
+CannedVas.prototype.drawSystemFocusRing = function (element) {
+    // Not sure yet
+
+    this.ctx.drawSystemFocusRing(element)
+    return this
 }
 
 CannedVas.prototype.currentPath = function () {
@@ -997,7 +1021,4 @@ CannedVas.applyMatrixFilter = function (input, output, matrix) {
     while (x = w, y--)
     while (x--, i = (((y * w) + x) * 4), x)
         output[i + 3] = input[i + 3]
-
-    // get index of x/y
-    // (((y * w) + x) * 4)
 }
