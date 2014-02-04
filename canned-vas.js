@@ -238,7 +238,7 @@ CannedVas.prototype.clipRect = function (x, y, w, h) {
 }
 
 CannedVas.prototype.fillRect = function (x, y, w, h) {
-this.ctx.fillRect(x, y, w, h)
+    this.ctx.fillRect(x, y, w, h)
     return this
 }
 
@@ -490,7 +490,7 @@ CannedVas.prototype.clearLine = function (x1, y1, x2, y2) {
 CannedVas.prototype.strokeLine = function (x1, y1, x2, y2) {
     this.ctx.beginPath()
     this.ctx.moveTo(x1, y1)
-    this.ctx lineTo(x2, y2)
+    this.ctx.lineTo(x2, y2)
     this.ctx.stroke()
     return this
 }
@@ -519,6 +519,7 @@ CannedVas.prototype.strokeArc = function (x, y, radius, startAngle, endAngle, an
     this.ctx.beginPath()
     this.ctx.arc(x, y, radius, startAngle, endAngle, anticlockwise)
     this.ctx.stroke()
+    return this
 }
 
 
@@ -1021,4 +1022,6 @@ CannedVas.applyMatrixFilter = function (input, output, matrix) {
     while (x = w, y--)
     while (x--, i = (((y * w) + x) * 4), x)
         output[i + 3] = input[i + 3]
+
+    return this
 }
