@@ -694,6 +694,10 @@ CannedVas.prototype.translate = function (x, y) {
     return this
 }
 
+CannedVas.prototype.translateTo = function (x, y) {
+    return this.translate(x, y).moveTo(0, 0)
+}
+
 CannedVas.prototype.translateToCenter = function () {
     // Convenience for translating to the center of the canvas
 
