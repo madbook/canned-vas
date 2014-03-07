@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CannedVas Tests</title>
+    <link rel="stylesheet" href="test.css">
+</head>
+<body>
+    <script type="text/javascript" src="dist/canned-vas.js"></script>
+    <script type="text/javascript" src="test.js"></script>
+    <script type="text/javascript">
+
+    describe('Test Framework', function () {
+        it('fillRect', function (can) {
+            show(can.fillRect(25, 25, 50, 50).vas)
+        })
+
+        it('strokeRect', function (can) {
+            show(can.strokeRect(25, 25, 50, 50).vas)
+        })
+
+        it('fillCanvas', function (can) {
+            show(can.fillCanvas().vas)
+        })
+    })
+    describe('core', function () {
+        describe('styles', function () {
+            it('fillStyle', function (can) {
+                can.fillStyle('red')
+                   .fillRect(25, 25, 50, 50)
+                show(can.vas)
+            })
+
+            it('strokeStyle', function (can) {
+                can.strokeStyle('red').strokeRect(25, 25, 50, 50)
+                show(can.vas)
+                can = can.createCanvas()
+                can.strokeStyle('green', 10).strokeRect(25, 25, 50, 50)
+                show(can.vas)
+            })
+
+            it('lineWidth', function (can) {
+                can.lineWidth(10).strokeRect(25, 25, 50, 50)
+                show(can.vas)
+            })
+
+            it('lineDash', function (can) {
+                can.lineDash([5, 5]).strokeRect(25, 25, 50, 50)
+                show(can.vas)
+            })
+
+            it('paintStyle', function (can) {
+                can.paintStyle('yellow', 'red', 5, [5, 5]).paintRect(25, 25, 50, 50)
+                show(can.vas)
+            })
+        })
+
+        describe('globals', function () {
+            it('alpha', function (can) {
+                show(can.createCanvas().alpha(0.5).fillRect(25, 25, 50, 50).vas)
+                show(can.createCanvas().alpha(0.5).fillRect(20, 20, 50, 50)
+                        .fillRect(30, 30, 50, 50).vas)
+            })
+
+            it('compositeOperation', function (can) {
+                can.fillCanvas()
+                   .compositeOperation('destination-out')
+                   .fillRect(25, 25, 50, 50)
+                show(can.vas)
+            })
+
+            it('globals', function (can) {
+                can.fillCanvas()
+                   .globals(0.5, 'destination-out')
+                   .fillRect(25, 25, 50, 50)
+                show(can.vas)
+            })
+        })
+
+        describe('draw', function () {
+          it('clear', function (can) {
+
+          })
+
+          it('clip', function (can) {
+
+          })
+
+          it('fill', function (can) {
+
+          })
+
+          it('stroke', function (can) {
+
+          })
+
+          it('paint', function (can) {
+
+          })
+
+        })
+      })
+    </script>
+</body>
+</html>

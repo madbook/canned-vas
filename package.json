@@ -1,0 +1,24 @@
+{
+  "name": "canned-vas",
+  "version": "0.0.1",
+  "description": "Better Canvas Drawing API",
+  "main": "canned-vas.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/madbook/canned-vas.git"
+  },
+  "author": "Matthew Lee (matt@madleedesign.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/madbook/canned-vas/issues"
+  },
+  "homepage": "https://github.com/madbook/canned-vas",
+  "devDependencies": {
+    "grunt": "^0.4.2",
+    "grunt-contrib-coffee": "^0.10.1",
+    "grunt-contrib-concat": "^0.3.0"
+  }
+}

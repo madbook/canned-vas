@@ -1,0 +1,43 @@
+body {
+    width: 1000px;
+    margin: 2rem auto;
+    font-family: 'Source Code Pro';
+    font-size: 16px;
+    background-color: #223;
+    color: #ccc;
+}
+
+.describe-block {
+    padding-left: 19px;
+    margin-bottom: 1rem;
+    border-left: 1px solid;
+    overflow: auto;
+    clear:both;
+    
+}
+
+.describe-title {
+
+}
+
+.it-block {
+    padding-left: 19px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-right:20px;
+    border-left: 1px dotted;
+    float:left;
+}
+
+.it-title {
+}
+
+.it-error, .describe-error {
+    color: red;
+}
+
+canvas {
+    margin-top: 20px;
+    margin-right: 20px;
+    background: #ffe;
+}
