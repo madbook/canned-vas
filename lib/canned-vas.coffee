@@ -1,4 +1,4 @@
-class CannedVas
+window.CannedVas = class CannedVas
   @extend: (extendObj) ->
     for key, val of extendObj
       CannedVas::[key] = val
@@ -28,6 +28,9 @@ class CannedVas
     CannedVas::[key] = (args...) ->
       return unless args.length then @ctx[key]() else @ctx[key] args...; this
 
+  @create: () ->
+    return new CannedVas document.createElement 'canvas'
+
   constructor: (ctx) ->
-    @ctx = if ctx instanceof HTMLCanvasElement else ctx.getContext '2d'
+    @ctx = if ctx instanceof HTMLCanvasElement then ctx.getContext '2d' else ctx
     @vas = @ctx.canvas

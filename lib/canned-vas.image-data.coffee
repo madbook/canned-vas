@@ -1,5 +1,3 @@
-CannedVas = require './canned-vas'
-
 ## cannedvas.imagedata
 # Methods that get and set imageData
 

@@ -1,5 +1,3 @@
-CannedVas = require './canned-vas'
-
 ## cannedvas.fills
 
 CannedVas.extend {
@@ -32,4 +30,4 @@ CannedVas.alias 'drawImage', 'image'
 CannedVas.registerGetSetProperty 'shadowBlur'
 CannedVas.registerGetSetProperty 'shadowColor'
 CannedVas.registerGetSetProperty 'shadowOffsetX'
-CannedVas.registerGetSetProperty 'shadowOffsetY''
+CannedVas.registerGetSetProperty 'shadowOffsetY'

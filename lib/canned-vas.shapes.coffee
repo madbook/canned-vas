@@ -1,5 +1,3 @@
-CannedVas = require './canned-vas'
-
 TAU = Math.PI * 2
 
 ## Shapes

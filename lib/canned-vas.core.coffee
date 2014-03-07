@@ -1,34 +1,18 @@
-CannedVas = require './canned-vas'
 CannedVas.eraser = alpha: 1, composite: 'destination-out'
 
 # cannedvas.styles
 # Methods for setting the drawing style of the rendering context
 
 CannedVas.extend {
-  compositeOperation: (val) ->
-    unless val? then return @ctx.globalCompositeOperation
-    @ctx.globalCompositeOperation = val
-    return this
-
-  alpha: (val) ->
-    unless val? then return @ctx.globalAlpha
-    @ctx.globalAlpha = val
-    return this
-
   fillStyle: (val) ->
     unless val? then return @ctx.fillStyle
     @ctx.fillStyle = val
     return this
 
-  strokeStyle: (val) ->
+  strokeStyle: (val, width) ->
     unless val? then return @ctx.strokeStyle
     @ctx.strokeStyle = val
-    return this
-
-  paintStyle: (fill, stroke) ->
-    unless fill? then return [@fillStyle(), @paintStyle()]
-    @fillStyle fill
-    @strokeStyle if stroke? then stroke else fill
+    if width? then @ctx.lineWidth = width
     return this
 
   lineWidth: (val) ->
@@ -39,6 +23,47 @@ CannedVas.extend {
   lineDash: (sequence) ->
     unless sequence? then return @ctx.getLineDash()
     @ctx.setLineDash sequence
+    return this
+
+  paintStyle: (fill, stroke, width, dash) ->
+    unless fill? then return {
+        fill:@fillStyle()
+        stroke:@strokeStyle()
+        lineWidth:@lineWidth()
+        lineDash:@lineDash()
+    }
+
+    @ctx.fillStyle = fill
+    @ctx.strokeStyle = if stroke? then stroke else fill
+    if width? then @ctx.lineWidth = width
+    if dash? then @ctx.setLineDash dash
+
+    return this
+}
+
+## cannedvas.globals
+# global style values
+
+CannedVas.extend {
+  alpha: (val) ->
+    unless val? then return @ctx.globalAlpha
+    @ctx.globalAlpha = val
+    return this
+
+  compositeOperation: (val) ->
+    unless val? then return @ctx.globalCompositeOperation
+    @ctx.globalCompositeOperation = val
+    return this
+
+  globals: (alpha, compositeOperation) ->
+    unless alpha? then return {
+      alpha: @alpha()
+      compositeOperation: @compositeOperation()
+    }
+
+    if alpha? then @ctx.globalAlpha = alpha
+    if compositeOperation then @ctx.globalCompositeOperation = compositeOperation
+
     return this
 }
 
@@ -57,6 +82,10 @@ CannedVas.extend {
   clear: () ->
     globals = @globals()
     return @globals(CannedVas.eraser).fill().globals(globals)
+
+  clip: () ->
+    @ctx.clip()
+    return this
 
   fill: () ->
     @ctx.fill()
@@ -133,8 +162,7 @@ CannedVas.extend {
 
 CannedVas.registerGetSetProperty 'imageSmoothingEnabled'
 
-CannedVas.alias 'globalCompositeOperation', 'composite'
-CannedVas.alias 'compositeOperation', 'composite'
+CannedVas.alias 'globalCompositeOperation', 'compositeOperation'
 CannedVas.alias 'globalAlpha', 'alpha'
 CannedVas.alias 'beginPath', 'path'
 CannedVas.alias 'closePath', 'close'

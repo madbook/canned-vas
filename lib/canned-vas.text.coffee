@@ -1,5 +1,3 @@
-CannedVas = require './canned-vas'
-
 ## cannedvas.text
 # Methods for drawing text
 

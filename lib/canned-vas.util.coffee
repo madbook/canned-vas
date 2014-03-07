@@ -1,5 +1,3 @@
-CannedVas = require './canned-vas'
-
 ## cannedvas.util
 
 CannedVas.extend {
@@ -17,12 +15,6 @@ CannedVas.extend {
     unless dimensionObj? then return width: @width(), height: @height()
     if dimensionObj.width? then @width dimensionObj.width
     if dimensionObj.height? then @height dimensionObj.height
-    return this
-
-  globals: (globalObj) ->
-    unless globalObj? then return alpha: @alpha(), composite: @composite()
-    if globalObj.alpha? then @alpha globalObj.alpha
-    if globalObj.composite? then @composite globalObj.composite
     return this
 
   createCanvas: () ->
