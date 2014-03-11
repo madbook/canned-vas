@@ -191,6 +191,10 @@
       globals = this.globals();
       return this.globals(CannedVas.eraser).fill().globals(globals);
     },
+    clip: function() {
+      this.ctx.clip();
+      return this;
+    },
     fill: function() {
       this.ctx.fill();
       return this;
@@ -555,12 +559,28 @@
   });
 
   CannedVas.extend({
-    image: function() {},
-    imageAt: function() {},
-    imageIn: function() {},
-    imageCrop: function() {},
-    imageCropIn: function() {},
-    imageBox: function() {}
+    image: function() {
+      var args, _ref;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      (_ref = this.ctx).drawImage.apply(_ref, args);
+      return this;
+    },
+    imageAt: function(image, x, y) {
+      this.ctx.drawImage(image, x, y);
+      return this;
+    },
+    imageIn: function(image, dx, dy, dw, dh) {
+      this.ctx.drawImage(image, dx, dy, dw, dh);
+      return this;
+    },
+    imageCrop: function(image, sx, sy, sw, sh, dx, dy) {
+      this.ctx.drawImage(image, sx, sy, sw, sh, dx, dy, sw, sh);
+      return this;
+    },
+    imageCropIn: function(image, sx, sy, sw, sh, dx, dy, dw, dh) {
+      this.ctx.drawImage(image, sx, sy, sw, sh, dx, dy, sw, sh);
+      return this;
+    }
   });
 
   CannedVas.alias('drawImage', 'image');

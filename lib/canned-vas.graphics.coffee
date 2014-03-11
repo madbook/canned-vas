@@ -17,12 +17,28 @@ CannedVas.extend {
 ## Image Drawing
 
 CannedVas.extend {
-  image: () ->
-  imageAt: () ->
-  imageIn: () ->
-  imageCrop: () ->
-  imageCropIn: () ->
-  imageBox: () ->
+  image: (args...) ->
+    @ctx.drawImage args...
+    return this
+
+  imageAt: (image, x, y) ->
+    @ctx.drawImage image, x, y
+    return this
+
+  imageIn: (image, dx, dy, dw, dh) ->
+    # draw an image scaled into the specified destination box
+    @ctx.drawImage image, dx, dy, dw, dh
+    return this
+
+  imageCrop: (image, sx, sy, sw, sh, dx, dy) ->
+    # draw the specified crop of an image
+    @ctx.drawImage image, sx, sy, sw, sh, dx, dy, sw, sh
+    return this
+
+  imageCropIn: (image, sx, sy, sw, sh, dx, dy, dw, dh) ->
+    # specify crop box and scale box to draw image into
+    @ctx.drawImage image, sx, sy, sw, sh, dx, dy, sw, sh
+    return this
 }
 
 CannedVas.alias 'drawImage', 'image'
