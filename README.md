@@ -8,7 +8,7 @@ canvas methods, as well as get/set methods for canvas and context properties.
 #### Goals
 
 * Provide more convenient access to the canvas drawing api through _chaining_
-* Make the api more _consitent_ by adding "missing" methods
+* Make the api more _consistent_ by adding "missing" methods
 * _Extend_ the api with more useful drawing methods
 
 
