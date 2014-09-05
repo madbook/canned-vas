@@ -11,6 +11,23 @@ canvas methods, as well as get/set methods for canvas and context properties.
 * Make the api more _consistent_ by adding "missing" methods
 * _Extend_ the api with more useful drawing methods
 
+#### Building
+
+The canned-vas library is written in several coffescript modules (located in `lib/`).  Grunt is used to compile them into a single javascript module (located in `dist`).
+
+If you don't have `grunt` installed globally,
+
+```
+npm install -g grunt-cli
+```
+
+Then,
+
+```
+npm install
+grunt build
+```
+
 
 Method Chaining
 --------
