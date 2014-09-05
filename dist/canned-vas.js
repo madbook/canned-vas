@@ -355,9 +355,9 @@
   CannedVas.extend({
     style: function(prop, val) {
       if (val == null) {
-        return window.getComputedStyle(this.vas)[property];
+        return window.getComputedStyle(this.vas)[prop];
       }
-      this.vas.style[property] = val;
+      this.vas.style[prop] = val;
       return this;
     }
   });

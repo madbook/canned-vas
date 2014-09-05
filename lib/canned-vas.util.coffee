@@ -57,8 +57,8 @@ CannedVas.extend {
 
 CannedVas.extend {
   style: (prop, val) ->
-    unless val? then return window.getComputedStyle(@vas)[property]
-    @vas.style[property] = val
+    unless val? then return window.getComputedStyle(@vas)[prop]
+    @vas.style[prop] = val
     return this
 }
 
