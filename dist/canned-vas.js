@@ -471,7 +471,7 @@
       y1 = y + h2;
       x2 = x - w2;
       y2 = y - h2;
-      this.moveTo(x1, y).bezierCurveTo(x1, y - oy, x - ox, y1, x, y1).bezierCurveTo(x + ox, y1, x2, y - oy, x2, y).bezierCurveTo(x2, y + oy, x + ox, y2, x, y2).bezierCurveTo(x - ox, y2, x1, y + oy, x1, y);
+      this.moveTo(x1, y).bezierCurveTo(x1, y + oy, x + ox, y1, x, y1).bezierCurveTo(x - ox, y1, x2, y + oy, x2, y).bezierCurveTo(x2, y - oy, x - ox, y2, x, y2).bezierCurveTo(x + ox, y2, x1, y - oy, x1, y);
       return this;
     },
     clearEllipse: function(x, y, w, h) {

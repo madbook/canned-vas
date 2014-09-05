@@ -106,10 +106,10 @@ CannedVas.extend {
       y2 = y - h2
 
       @moveTo x1, y
-        .bezierCurveTo x1, y - oy, x - ox, y1, x, y1
-        .bezierCurveTo x + ox, y1, x2, y - oy, x2, y
-        .bezierCurveTo x2, y + oy, x + ox, y2, x, y2
-        .bezierCurveTo x - ox, y2, x1, y + oy, x1, y
+        .bezierCurveTo x1, y + oy, x + ox, y1, x, y1
+        .bezierCurveTo x - ox, y1, x2, y + oy, x2, y
+        .bezierCurveTo x2, y - oy, x - ox, y2, x, y2
+        .bezierCurveTo x + ox, y2, x1, y - oy, x1, y
       return this
 
     clearEllipse: (x, y, w, h) ->
