@@ -742,6 +742,6 @@
 
   CannedVas.registerGetSetProperty('textAlign');
 
-  CannedVas.registerGetSetProperty('textBaseLine');
+  CannedVas.registerGetSetProperty('textBaseline');
 
 }).call(this);

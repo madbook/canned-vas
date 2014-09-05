@@ -34,4 +34,4 @@ CannedVas.extend {
 CannedVas.registerGetMethod 'measureText'
 CannedVas.registerGetSetProperty 'font'
 CannedVas.registerGetSetProperty 'textAlign'
-CannedVas.registerGetSetProperty 'textBaseLine'
+CannedVas.registerGetSetProperty 'textBaseline'
