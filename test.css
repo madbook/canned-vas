@@ -26,10 +26,12 @@ body {
     margin-top: 20px;
     margin-right:20px;
     border-left: 1px dotted;
-    float:left;
+    /*float:left;*/
+    overflow: auto;
 }
 
-.it-title {
+.it-description {
+    margin-bottom: 10px;
 }
 
 .it-error, .describe-error {
@@ -37,7 +39,16 @@ body {
 }
 
 canvas {
-    margin-top: 20px;
+    /*margin-top: 20px;*/
     margin-right: 20px;
     background: #ffe;
+    float: left;
+}
+
+.source {
+    font-size: 12px;
+    overflow: auto;
+    padding: 0 10px;
+    box-sizing: border-box;
+    background: black;
 }

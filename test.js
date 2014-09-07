@@ -53,6 +53,11 @@
             errElem.className = 'it-error'
             testElem.appendChild(errElem)
         }
+        show(can.vas)
+        var codeElement = document.createElement('div')
+        codeElement.innerHTML = "<pre><code>" + runner.toString() + "</code></pre>"
+        codeElement.className = 'source'
+        show(codeElement)
         describes.pop()
         show(testElem)
     }
