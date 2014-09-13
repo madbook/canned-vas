@@ -108,13 +108,17 @@ CannedVas::setPixelRatio = (ratio) ->
 CannedVas.extend {
   snap: -> 
     if not @meta 'snapped'
-      @translate -0.5, -0.5
-      @meta 'snapped', true
+      snap = 0
+      if @lineWidth() % 2
+        snap = 0.5
+      @translate -snap, -snap
+      @meta 'snapped', snap
     return this
 
   unsnap: -> 
-    if @meta 'snapped' 
-      @translate 0.5, 0.5
+    snap = @meta 'snapped'
+    if snap
+      @translate snap, snap
       @meta 'snapped', false
     return this
 }

@@ -22,8 +22,7 @@ CannedVas.extend {
     return this
 
   strokeRect: (x, y, w, h) ->
-    @ctx.strokeRect x, y, w, h
-    return this
+    return @snap().rect(x, y, w, h).stroke().unsnap()
 
   paintRect: (x, y, w, h) ->
     @ctx.fillRect x, y, w, h
@@ -76,13 +75,13 @@ CannedVas.extend {
     return @beginPath().circle(x, y, radius).clip()
 
   fillCircle: (x, y, radius) ->
-    return @beginPath().circle(x, y, radius).fill()
+    return @path().circle(x, y, radius).fill()
 
   strokeCircle: (x, y, radius) ->
-    return @beginPath().circle(x, y, radius).stroke()
+    return @path().snap().circle(x, y, radius).stroke().unsnap()
 
   paintCircle: (x, y, radius) ->
-    return @beginPath().circle(x, y, radius).paint()
+    return @fillCircle(x, y, radius).strokeCircle(x, y, radius)
 
   imageCircle: (image, x, y, radius) ->
     w = radius * 2
@@ -122,10 +121,10 @@ CannedVas.extend {
       return @path().ellipse(x, y, w, h).fill()
 
     strokeEllipse: (x, y, w, h) ->
-      return @path().ellipse(x, y, w, h).stroke()
+      return @path().snap().ellipse(x, y, w, h).stroke().unsnap()
 
     paintEllipse: (x, y, w, h) ->
-      return @path().ellipse(x, y, w, h).paint()
+      return @fillEllipse(x, y, w, h).strokeEllipse(x, y, w, h)
 
     imageEllipse: (img, x, y, w, h) ->
       @save().clipEllipse(x, y, w, h).imageBox(img, x, y, w, h).restore()

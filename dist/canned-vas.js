@@ -439,15 +439,22 @@
 
   CannedVas.extend({
     snap: function() {
+      var snap;
       if (!this.meta('snapped')) {
-        this.translate(-0.5, -0.5);
-        this.meta('snapped', true);
+        snap = 0;
+        if (this.lineWidth() % 2) {
+          snap = 0.5;
+        }
+        this.translate(-snap, -snap);
+        this.meta('snapped', snap);
       }
       return this;
     },
     unsnap: function() {
-      if (this.meta('snapped')) {
-        this.translate(0.5, 0.5);
+      var snap;
+      snap = this.meta('snapped');
+      if (snap) {
+        this.translate(snap, snap);
         this.meta('snapped', false);
       }
       return this;
@@ -473,8 +480,7 @@
       return this;
     },
     strokeRect: function(x, y, w, h) {
-      this.ctx.strokeRect(x, y, w, h);
-      return this;
+      return this.snap().rect(x, y, w, h).stroke().unsnap();
     },
     paintRect: function(x, y, w, h) {
       this.ctx.fillRect(x, y, w, h);
@@ -523,13 +529,13 @@
       return this.beginPath().circle(x, y, radius).clip();
     },
     fillCircle: function(x, y, radius) {
-      return this.beginPath().circle(x, y, radius).fill();
+      return this.path().circle(x, y, radius).fill();
     },
     strokeCircle: function(x, y, radius) {
-      return this.beginPath().circle(x, y, radius).stroke();
+      return this.path().snap().circle(x, y, radius).stroke().unsnap();
     },
     paintCircle: function(x, y, radius) {
-      return this.beginPath().circle(x, y, radius).paint();
+      return this.fillCircle(x, y, radius).strokeCircle(x, y, radius);
     },
     imageCircle: function(image, x, y, radius) {
       var w;
@@ -564,10 +570,10 @@
       return this.path().ellipse(x, y, w, h).fill();
     },
     strokeEllipse: function(x, y, w, h) {
-      return this.path().ellipse(x, y, w, h).stroke();
+      return this.path().snap().ellipse(x, y, w, h).stroke().unsnap();
     },
     paintEllipse: function(x, y, w, h) {
-      return this.path().ellipse(x, y, w, h).paint();
+      return this.fillEllipse(x, y, w, h).strokeEllipse(x, y, w, h);
     },
     imageEllipse: function(img, x, y, w, h) {
       this.save().clipEllipse(x, y, w, h).imageBox(img, x, y, w, h).restore();
