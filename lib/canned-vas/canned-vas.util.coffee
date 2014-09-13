@@ -60,6 +60,18 @@ CannedVas.extend {
     unless val? then return window.getComputedStyle(@vas)[prop]
     @vas.style[prop] = val
     return this
+
+  stylePx: (prop, val) ->
+    if not val? then return @style(prop).slice(0, -2)
+    @style prop, val + 'px'
+    return this
+
+  styleSize: (dimensionObj) ->
+    if not dimensionObj? 
+      return width: @stylePx('width'), height: @stylePx('height')
+    if dimensionObj.width? then @stylePx 'width', dimensionObj.width
+    if dimensionObj.height? then @stylePx 'height', dimensionObj.height
+    return this
 }
 
 CannedVas.registerGetMethod 'scrollPathIntoView'
@@ -68,3 +80,28 @@ CannedVas.registerGetMethod 'isPointInStroke'
 CannedVas.registerGetMethod 'drawCustomFocusRing'
 CannedVas.registerGetMethod 'drawSystemFocusRing'
 CannedVas.registerGetMethod 'currentPath'
+
+getDefaultPixelRatio = () ->
+  can = document.createElement 'canvas'
+  ctx = can.getContext '2d'
+  devicePixelRatio = window.devicePixelRatio || 1
+  backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
+                      ctx.mozBackingStorePixelRatio ||
+                      ctx.msBackingStorePixelRatio ||
+                      ctx.oBackingStorePixelRatio ||
+                      ctx.backingStorePixelRatio || 1
+  return devicePixelRatio / backingStoreRatio
+
+defaultPixelRatio = getDefaultPixelRatio()
+
+CannedVas.extend {
+  setPixelRatio: (ratio) ->
+    if not ratio?
+      ratio = defaultPixelRatio
+    original = @size()
+    scaled = width: original * ratio, height: original * ratio
+    @size scaled
+    @styleSize original
+    @scale ratio, ratio
+    return this
+}

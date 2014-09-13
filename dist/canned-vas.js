@@ -1,5 +1,5 @@
 (function() {
-  var CannedVas, TAU, applyTestText, _div, _style,
+  var CannedVas, TAU, applyTestText, defaultPixelRatio, getDefaultPixelRatio, _div, _style,
     __slice = [].slice;
 
   window.CannedVas = CannedVas = (function() {
@@ -359,6 +359,28 @@
       }
       this.vas.style[prop] = val;
       return this;
+    },
+    stylePx: function(prop, val) {
+      if (val == null) {
+        return this.style(prop).slice(0, -2);
+      }
+      this.style(prop, val + 'px');
+      return this;
+    },
+    styleSize: function(dimensionObj) {
+      if (dimensionObj == null) {
+        return {
+          width: this.stylePx('width'),
+          height: this.stylePx('height')
+        };
+      }
+      if (dimensionObj.width != null) {
+        this.stylePx('width', dimensionObj.width);
+      }
+      if (dimensionObj.height != null) {
+        this.stylePx('height', dimensionObj.height);
+      }
+      return this;
     }
   });
 
@@ -373,6 +395,35 @@
   CannedVas.registerGetMethod('drawSystemFocusRing');
 
   CannedVas.registerGetMethod('currentPath');
+
+  getDefaultPixelRatio = function() {
+    var backingStoreRatio, can, ctx, devicePixelRatio;
+    can = document.createElement('canvas');
+    ctx = can.getContext('2d');
+    devicePixelRatio = window.devicePixelRatio || 1;
+    backingStoreRatio = ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1;
+    return devicePixelRatio / backingStoreRatio;
+  };
+
+  defaultPixelRatio = getDefaultPixelRatio();
+
+  CannedVas.extend({
+    setPixelRatio: function(ratio) {
+      var original, scaled;
+      if (ratio == null) {
+        ratio = defaultPixelRatio;
+      }
+      original = this.size();
+      scaled = {
+        width: original * ratio,
+        height: original * ratio
+      };
+      this.size(scaled);
+      this.styleSize(original);
+      this.scale(ratio, ratio);
+      return this;
+    }
+  });
 
   TAU = Math.PI * 2;
 
