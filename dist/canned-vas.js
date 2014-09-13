@@ -1,5 +1,5 @@
 (function() {
-  var CannedVas, TAU,
+  var CannedVas, TAU, applyTestText, _div, _style,
     __slice = [].slice;
 
   window.CannedVas = CannedVas = (function() {
@@ -703,20 +703,38 @@
     return this;
   };
 
+  _div = document.createElement('div');
+
+  _style = window.getComputedStyle(_div);
+
+  applyTestText = function(text, can) {
+    _div.innerHTML = text;
+    return _div.style.font = can.font();
+  };
+
   CannedVas.extend({
-    textWidth: function(text) {
+    getTextWidth: function(text) {
       return this.ctx.measureText(text).width;
     },
-    textHeight: function(text) {
-      var d, h;
-      d = document.createElement('div');
-      document.body.appendChild(d);
-      d.innerHTML = 'm';
-      d.style.font = this.font();
-      d.style.lineHeight = '1em';
-      h = d.offsetHeight;
-      document.body.removeChild(d);
-      return h;
+    getFontSize: function(text) {
+      var height;
+      document.body.appendChild(_div);
+      this._applyTestText(text);
+      height = parseFloat(_style.fontSize.slice(0, -2));
+      document.body.removeChild(_div);
+      return height;
+    },
+    getLineHeight: function(text) {
+      var lineHeight;
+      document.body.appendChild(_div);
+      this._applyTestText(text);
+      lineHeight = parseFloat(_style.lineHeight.slice(0, -2));
+      document.body.removeChild(_div);
+      return lineHeight;
+    },
+    _applyTestText: function(text) {
+      _div.innerHTML = text;
+      return _div.style.font = this.font();
     },
     clearText: function(text, x, y) {
       var globals;
