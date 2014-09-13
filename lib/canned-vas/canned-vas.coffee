@@ -34,3 +34,14 @@ window.CannedVas = class CannedVas
   constructor: (ctx) ->
     @ctx = if ctx instanceof HTMLCanvasElement then ctx.getContext '2d' else ctx
     @vas = @ctx.canvas
+    @metaData = {}
+
+  meta: (prop, val) ->
+    if not val?
+      if not @metaData[prop]?
+        return null
+      else
+        return @metaData[prop]
+    else
+      @metaData[prop] = val
+      return this

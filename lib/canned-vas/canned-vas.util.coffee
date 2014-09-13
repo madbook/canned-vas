@@ -94,14 +94,27 @@ getDefaultPixelRatio = () ->
 
 defaultPixelRatio = getDefaultPixelRatio()
 
+CannedVas::setPixelRatio = (ratio) ->
+  if not ratio?
+    ratio = defaultPixelRatio
+  original = @size()
+  scaled = width: original.width * ratio, height: original.height * ratio
+  @size scaled
+  @styleSize original
+  @scale ratio, ratio
+  return this
+
+
 CannedVas.extend {
-  setPixelRatio: (ratio) ->
-    if not ratio?
-      ratio = defaultPixelRatio
-    original = @size()
-    scaled = width: original.width * ratio, height: original.height * ratio
-    @size scaled
-    @styleSize original
-    @scale ratio, ratio
+  snap: -> 
+    if not @meta 'snapped'
+      @translate -0.5, -0.5
+      @meta 'snapped', true
+    return this
+
+  unsnap: -> 
+    if @meta 'snapped' 
+      @translate 0.5, 0.5
+      @meta 'snapped', false
     return this
 }

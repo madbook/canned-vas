@@ -94,12 +94,35 @@
               can.rect(25, 25, 50, 50)
                  .paint()
           })
+          it('fill snapped', function (can) {
+              can.snap()
+                 .rect(25, 25, 50, 50)
+                 .fill()
+          })
+          
+          it('snapped stroke', function (can) {
+              can.snap()
+                 .rect(25, 25, 50, 50)
+                 .stroke()
+          })
 
         })
       })
       describe('scaling', function() {
         it('does retina', function (can) {
           can.setPixelRatio(2)
+          can.rect(25, 25, 50, 50)
+             .stroke()
+        })
+        it('does retina snapped', function (can) {
+          can.setPixelRatio(2)
+          can.translate(-0.5, -0.5)
+             .rect(25, 25, 50, 50)
+             .stroke()
+             .translate(0.5, 0.5)
+        })
+        it('does double retina', function (can) {
+          can.setPixelRatio(4)
           can.rect(25, 25, 50, 50)
              .stroke()
         })

@@ -81,7 +81,21 @@
     function CannedVas(ctx) {
       this.ctx = ctx instanceof HTMLCanvasElement ? ctx.getContext('2d') : ctx;
       this.vas = this.ctx.canvas;
+      this.metaData = {};
     }
+
+    CannedVas.prototype.meta = function(prop, val) {
+      if (val == null) {
+        if (this.metaData[prop] == null) {
+          return null;
+        } else {
+          return this.metaData[prop];
+        }
+      } else {
+        this.metaData[prop] = val;
+        return this;
+      }
+    };
 
     return CannedVas;
 
@@ -407,20 +421,35 @@
 
   defaultPixelRatio = getDefaultPixelRatio();
 
+  CannedVas.prototype.setPixelRatio = function(ratio) {
+    var original, scaled;
+    if (ratio == null) {
+      ratio = defaultPixelRatio;
+    }
+    original = this.size();
+    scaled = {
+      width: original.width * ratio,
+      height: original.height * ratio
+    };
+    this.size(scaled);
+    this.styleSize(original);
+    this.scale(ratio, ratio);
+    return this;
+  };
+
   CannedVas.extend({
-    setPixelRatio: function(ratio) {
-      var original, scaled;
-      if (ratio == null) {
-        ratio = defaultPixelRatio;
+    snap: function() {
+      if (!this.meta('snapped')) {
+        this.translate(-0.5, -0.5);
+        this.meta('snapped', true);
       }
-      original = this.size();
-      scaled = {
-        width: original.width * ratio,
-        height: original.height * ratio
-      };
-      this.size(scaled);
-      this.styleSize(original);
-      this.scale(ratio, ratio);
+      return this;
+    },
+    unsnap: function() {
+      if (this.meta('snapped')) {
+        this.translate(0.5, 0.5);
+        this.meta('snapped', false);
+      }
       return this;
     }
   });
