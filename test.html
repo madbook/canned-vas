@@ -126,6 +126,17 @@
           can.rect(25, 25, 50, 50)
              .stroke()
         })
+        it('does low res', function (can) {
+          can.setPixelRatio(0.25)
+          can.rect(25, 25, 50, 50)
+             .stroke()
+        })
+        it('does upscaling', function(can) {
+          var can2 = CannedVas.create().width(10).height(10)
+                              .path().moveTo(0,0).lineTo(8, 8)
+                              .stroke()
+          can.setPixelRatio(2).imageSmoothing(false).imageCanvas(can2.vas)
+        })
       })
     </script>
 </body>

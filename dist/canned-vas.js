@@ -81,6 +81,9 @@
     function CannedVas(ctx) {
       this.ctx = ctx instanceof HTMLCanvasElement ? ctx.getContext('2d') : ctx;
       this.vas = this.ctx.canvas;
+      this.displayWidth = this.vas.width;
+      this.displayHeight = this.vas.height;
+      this.ratio = 1;
       this.metaData = {};
     }
 
@@ -295,16 +298,20 @@
   CannedVas.extend({
     width: function(val) {
       if (val == null) {
-        return this.vas.width;
+        return this.displayWidth;
       }
-      this.vas.width = val;
+      this.displayWidth = val;
+      this.vas.width = val * this.ratio;
+      this.vas.style.width = val + 'px';
       return this;
     },
     height: function(val) {
       if (val == null) {
-        return this.vas.height;
+        return this.displayHeight;
       }
-      this.vas.height = val;
+      this.displayHeight = val;
+      this.vas.height = val * this.ratio;
+      this.vas.style.height = val + 'px';
       return this;
     },
     size: function(dimensionObj) {
@@ -422,17 +429,16 @@
   defaultPixelRatio = getDefaultPixelRatio();
 
   CannedVas.prototype.setPixelRatio = function(ratio) {
-    var original, scaled;
+    var original, unscale;
     if (ratio == null) {
       ratio = defaultPixelRatio;
     }
     original = this.size();
-    scaled = {
-      width: original.width * ratio,
-      height: original.height * ratio
-    };
-    this.size(scaled);
-    this.styleSize(original);
+    unscale = 1 / this.ratio;
+    this.ratio = ratio;
+    this.width(original.height * unscale);
+    this.height(original.height * unscale);
+    this.scale(unscale, unscale);
     this.scale(ratio, ratio);
     return this;
   };
@@ -583,22 +589,22 @@
 
   CannedVas.extend({
     canvas: function() {
-      return this.rect(0, 0, this.vas.width, this.vas.height);
+      return this.rect(0, 0, this.displayWidth, this.displayHeight);
     },
     clearCanvas: function() {
-      return this.clearRect(0, 0, this.vas.width, this.vas.height);
+      return this.clearRect(0, 0, this.displayWidth, this.displayHeight);
     },
     fillCanvas: function() {
-      return this.fillRect(0, 0, this.vas.width, this.vas.height);
+      return this.fillRect(0, 0, this.displayWidth, this.displayHeight);
     },
     strokeCanvas: function() {
-      return this.strokeRect(0, 0, this.vas.width, this.vas.height);
+      return this.strokeRect(0, 0, this.displayWidth, this.displayHeight);
     },
     paintCanvas: function() {
-      return this.paintRect(0, 0, this.vas.width, this.vas.height);
+      return this.paintRect(0, 0, this.displayWidth, this.displayHeight);
     },
     imageCanvas: function(img) {
-      return this.imageRect(img, 0, 0, this.vas.width, this.vas.height);
+      return this.imageRect(img, 0, 0, this.displayWidth, this.displayHeight);
     }
   });
 
@@ -668,6 +674,17 @@
       return this;
     }
   });
+
+  CannedVas.prototype.imageSmoothing = function(enabled) {
+    if (enabled == null) {
+      enabled = true;
+    }
+    this.ctx.mozImageSmoothingEnabled = enabled;
+    this.ctx.webkitImageSmoothingEnabled = enabled;
+    this.ctx.msImageSmoothingEnabled = enabled;
+    this.ctx.imageSmoothingEnabled = enabled;
+    return this;
+  };
 
   CannedVas.alias('drawImage', 'image');
 

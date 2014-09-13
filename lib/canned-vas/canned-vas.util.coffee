@@ -2,13 +2,17 @@
 
 CannedVas.extend {
   width: (val) ->
-    unless val? then return @vas.width
-    @vas.width = val
+    unless val? then return @displayWidth
+    @displayWidth = val
+    @vas.width = val * @ratio
+    @vas.style.width = val + 'px'
     return this
 
   height: (val) ->
-    unless val? then return @vas.height
-    @vas.height = val
+    unless val? then return @displayHeight
+    @displayHeight = val
+    @vas.height = val * @ratio
+    @vas.style.height = val + 'px'
     return this
 
   size: (dimensionObj) ->
@@ -98,9 +102,11 @@ CannedVas::setPixelRatio = (ratio) ->
   if not ratio?
     ratio = defaultPixelRatio
   original = @size()
-  scaled = width: original.width * ratio, height: original.height * ratio
-  @size scaled
-  @styleSize original
+  unscale = 1 / @ratio
+  @ratio = ratio
+  @width original.height * unscale
+  @height original.height * unscale
+  @scale unscale, unscale
   @scale ratio, ratio
   return this
 

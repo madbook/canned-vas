@@ -34,6 +34,9 @@ window.CannedVas = class CannedVas
   constructor: (ctx) ->
     @ctx = if ctx instanceof HTMLCanvasElement then ctx.getContext '2d' else ctx
     @vas = @ctx.canvas
+    @displayWidth = @vas.width
+    @displayHeight = @vas.height
+    @ratio = 1
     @metaData = {}
 
   meta: (prop, val) ->

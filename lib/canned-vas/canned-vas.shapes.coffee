@@ -136,22 +136,22 @@ CannedVas.extend {
 
 CannedVas.extend {
   canvas: () ->
-    return @rect 0, 0, @vas.width, @vas.height
+    return @rect 0, 0, @displayWidth, @displayHeight
 
   clearCanvas: () ->
-    return @clearRect 0, 0, @vas.width, @vas.height
+    return @clearRect 0, 0, @displayWidth, @displayHeight
 
   fillCanvas: () ->
-    return @fillRect 0, 0, @vas.width, @vas.height
+    return @fillRect 0, 0, @displayWidth, @displayHeight
 
   strokeCanvas: () ->
-    return @strokeRect 0, 0, @vas.width, @vas.height
+    return @strokeRect 0, 0, @displayWidth, @displayHeight
 
   paintCanvas: () ->
-    return @paintRect 0, 0, @vas.width, @vas.height
+    return @paintRect 0, 0, @displayWidth, @displayHeight
 
   imageCanvas: (img) ->
-    return @imageRect img, 0, 0, @vas.width, @vas.height
+    return @imageRect img, 0, 0, @displayWidth, @displayHeight
 }
 
 ## cannedvas.lines

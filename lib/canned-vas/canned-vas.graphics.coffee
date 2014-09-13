@@ -41,6 +41,13 @@ CannedVas.extend {
     return this
 }
 
+CannedVas::imageSmoothing = (enabled=true) ->
+  @ctx.mozImageSmoothingEnabled = enabled
+  @ctx.webkitImageSmoothingEnabled = enabled
+  @ctx.msImageSmoothingEnabled = enabled
+  @ctx.imageSmoothingEnabled = enabled
+  return this
+
 CannedVas.alias 'drawImage', 'image'
 
 CannedVas.registerGetSetProperty 'shadowBlur'
