@@ -10,20 +10,20 @@ module.exports = (grunt) ->
             dist:
                 dest: 'build/<%= pkg.name %>.coffee'
                 src: [
-                    'lib/canned-vas.coffee'
-                    'lib/canned-vas.core.coffee'
-                    'lib/canned-vas.util.coffee'
-                    'lib/canned-vas.shapes.coffee'
-                    'lib/canned-vas.graphics.coffee'
-                    'lib/canned-vas.image-data.coffee'
-                    'lib/canned-vas.text.coffee'
+                    'lib/canned-vas/canned-vas.coffee'
+                    'lib/canned-vas/canned-vas.core.coffee'
+                    'lib/canned-vas/canned-vas.util.coffee'
+                    'lib/canned-vas/canned-vas.shapes.coffee'
+                    'lib/canned-vas/canned-vas.graphics.coffee'
+                    'lib/canned-vas/canned-vas.image-data.coffee'
+                    'lib/canned-vas/canned-vas.text.coffee'
                 ]
 
         coffee:
             glob_to_multiple:
                 expand: true
                 flatten: true
-                src: 'build/*.coffee'
+                src: ['build/*.coffee', 'lib/plugins/*.coffee']
                 dest: 'dist/'
                 ext: '.js'
 
