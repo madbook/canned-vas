@@ -415,8 +415,8 @@
       }
       original = this.size();
       scaled = {
-        width: original * ratio,
-        height: original * ratio
+        width: original.width * ratio,
+        height: original.height * ratio
       };
       this.size(scaled);
       this.styleSize(original);

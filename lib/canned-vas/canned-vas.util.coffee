@@ -99,7 +99,7 @@ CannedVas.extend {
     if not ratio?
       ratio = defaultPixelRatio
     original = @size()
-    scaled = width: original * ratio, height: original * ratio
+    scaled = width: original.width * ratio, height: original.height * ratio
     @size scaled
     @styleSize original
     @scale ratio, ratio
