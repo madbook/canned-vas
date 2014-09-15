@@ -303,6 +303,7 @@
       this.displayWidth = val;
       this.vas.width = val * this.ratio;
       this.vas.style.width = val + 'px';
+      this.scale(this.ratio, this.ratio);
       return this;
     },
     height: function(val) {
@@ -312,6 +313,7 @@
       this.displayHeight = val;
       this.vas.height = val * this.ratio;
       this.vas.style.height = val + 'px';
+      this.scale(this.ratio, this.ratio);
       return this;
     },
     size: function(dimensionObj) {

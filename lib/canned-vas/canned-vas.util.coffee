@@ -6,6 +6,7 @@ CannedVas.extend {
     @displayWidth = val
     @vas.width = val * @ratio
     @vas.style.width = val + 'px'
+    @scale @ratio, @ratio
     return this
 
   height: (val) ->
@@ -13,6 +14,7 @@ CannedVas.extend {
     @displayHeight = val
     @vas.height = val * @ratio
     @vas.style.height = val + 'px'
+    @scale @ratio, @ratio
     return this
 
   size: (dimensionObj) ->
