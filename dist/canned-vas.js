@@ -488,7 +488,7 @@
       return this;
     },
     strokeRect: function(x, y, w, h) {
-      return this.snap().rect(x, y, w, h).stroke().unsnap();
+      return this.rect(x, y, w, h).stroke();
     },
     paintRect: function(x, y, w, h) {
       this.ctx.fillRect(x, y, w, h);
@@ -540,7 +540,7 @@
       return this.path().circle(x, y, radius).fill();
     },
     strokeCircle: function(x, y, radius) {
-      return this.path().snap().circle(x, y, radius).stroke().unsnap();
+      return this.path().circle(x, y, radius).stroke();
     },
     paintCircle: function(x, y, radius) {
       return this.fillCircle(x, y, radius).strokeCircle(x, y, radius);
@@ -578,7 +578,7 @@
       return this.path().ellipse(x, y, w, h).fill();
     },
     strokeEllipse: function(x, y, w, h) {
-      return this.path().snap().ellipse(x, y, w, h).stroke().unsnap();
+      return this.path().ellipse(x, y, w, h).stroke();
     },
     paintEllipse: function(x, y, w, h) {
       return this.fillEllipse(x, y, w, h).strokeEllipse(x, y, w, h);

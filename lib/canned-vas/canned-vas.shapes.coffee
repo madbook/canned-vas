@@ -22,7 +22,7 @@ CannedVas.extend {
     return this
 
   strokeRect: (x, y, w, h) ->
-    return @snap().rect(x, y, w, h).stroke().unsnap()
+    return @rect(x, y, w, h).stroke()
 
   paintRect: (x, y, w, h) ->
     @ctx.fillRect x, y, w, h
@@ -78,7 +78,7 @@ CannedVas.extend {
     return @path().circle(x, y, radius).fill()
 
   strokeCircle: (x, y, radius) ->
-    return @path().snap().circle(x, y, radius).stroke().unsnap()
+    return @path().circle(x, y, radius).stroke()
 
   paintCircle: (x, y, radius) ->
     return @fillCircle(x, y, radius).strokeCircle(x, y, radius)
@@ -121,7 +121,7 @@ CannedVas.extend {
       return @path().ellipse(x, y, w, h).fill()
 
     strokeEllipse: (x, y, w, h) ->
-      return @path().snap().ellipse(x, y, w, h).stroke().unsnap()
+      return @path().ellipse(x, y, w, h).stroke()
 
     paintEllipse: (x, y, w, h) ->
       return @fillEllipse(x, y, w, h).strokeEllipse(x, y, w, h)
